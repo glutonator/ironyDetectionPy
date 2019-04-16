@@ -1,4 +1,6 @@
 
+import nltk
+nltk.download('punkt')
 
 ########################################################
 # konwertowanie glove do formatu rozpoznawanego przez gensim

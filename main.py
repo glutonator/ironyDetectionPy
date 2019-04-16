@@ -7,13 +7,9 @@
 import numpy as np
 import pandas as pd
 from gensim.models import word2vec
-
-
 from gensim.models import KeyedVectors
 import nltk
 from nltk.tokenize import sent_tokenize, word_tokenize
-# nltk.download('punkt')
-
 
 # load the Stanford GloVe model
 filename = 'word2vec.txt'
@@ -41,26 +37,3 @@ print("Aaaaaaa")
 
 
 
-
-
-
-
-
-# with open('SemEval2018-T3-train-taskA.txt', 'r') as f:
-#     read_data = f.read()
-#     # stringList = read_data.split("\t")
-# print(read_data)
-# f.close()
-
-
-# print(np.version.version)
-
-# file = np.loadtxt('SemEval2018-T3-train-taskA.txt',
-#            dtype={'names': ('Tweet_index', 'Label', 'Tweet_text'),
-#                   'formats': ('i', 'bool', 'S200')},
-#            delimiter='\t',
-#                   skiprows=1)
-# file = np.genfromtxt('SemEval2018-T3-train-taskA.txt',
-#                      dtype={'names': ('Tweet_index', 'Label', 'Tweet_text'),
-#                             'formats': ('i', 'bool', 'S200')},
-#                      delimiter='\t', skip_header=1)
