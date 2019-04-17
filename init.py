@@ -1,6 +1,7 @@
 
 import nltk
 nltk.download('punkt')
+nltk.download('wordnet')
 
 ########################################################
 # konwertowanie glove do formatu rozpoznawanego przez gensim
