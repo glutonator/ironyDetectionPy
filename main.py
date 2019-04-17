@@ -7,68 +7,27 @@ import nltk
 from nltk.tokenize import TweetTokenizer
 import string
 
-# load the Stanford GloVe model
-filename = 'word2vec.txt'
-model = KeyedVectors.load_word2vec_format(filename, binary=False)
+from load_files import load_glove_model, load_input_data
+from preprocesing import clean_messages, print_all, tokenize_data, tokenize_data_test, translate_sentence_to_vectors
 
-# calculate: (king - man) + woman = ?
-# result = model.most_similar(positive=['woman', 'king'], negative=['man'], topn=1)
-# print(result)
+model = load_glove_model()
 
-tknzr = TweetTokenizer()
-# testData = "Sweet United Nations video. Just in time for Christmas. #imagine #NoReligion  http://t.co/fej2v3OUBR"
-testData = "@mrdahl87 We are rumored to have talked to Erv's agent... and the Angels asked about Ed Escobar... that's hardly nothing    ;)"
-testData = "@mrdahl87 He's rumored to have talked to Erv's agent... and the Angels asked about Ed Escobar... that's hardly nothing    ;)"
+tokenize_data_test()
 
-print(tknzr.tokenize(testData))
+data = load_input_data()
 
-# data = pd.read_csv('SemEval2018-T3-train-taskA.txt', sep="\t")
-data = pd.read_csv('test_dane.txt', sep="\t")
+clean_messages(data)
 
-# remove urls
-data['Tweet_text'] = data['Tweet_text'].str \
-    .replace('(http|ftp|https)://([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?', '', regex=True)
-
-# remove nicks
-data['Tweet_text'] = data['Tweet_text'].str.replace('@[A-Za-z0-9]+', '', regex=True)
-
-# remove hashtags
-data['Tweet_text'] = data['Tweet_text'].str.replace('\s([#][\w_-]+)', '', regex=True)
-
-
-# convert to lowercase
-data['Tweet_text'] = data['Tweet_text'].str.lower()
-
-# remove punctuation
-# data['Tweet_text'] = data['Tweet_text'].str.translate(str.maketrans("", ""), str.punctuation)
-# data['Tweet_text'] = data['Tweet_text'].str.translate(string.punctuation)
-
-# TODO:  KeyError: "word 'erv's' not in vocabulary"
-# data['Tweet_text'] = data['Tweet_text'].str.replace(rf'[{string.punctuation}]', '')
-
-data['Tweet_text'] = data['Tweet_text'].apply(tknzr.tokenize)
-# data['Tweet_text'] = data['Tweet_text'].
+tokenize_data(data)
 
 print(data['Tweet_text'][0])
 print(data.size)
 print(data.shape[0])
 print()
 print(model.get_vector('sweet'))
-for i in range(0, data.shape[0]):
-    print(data['Tweet_text'][i])
-    for j in data['Tweet_text'][i]:
-        print(j)
-        print(model.get_vector(j))
 
+translate_sentence_to_vectors(data, model)
 
-# for label, content in data.iteritems():
-#     print('label:', label)
-#     print('content:', content, sep='\n')
-
-# print(list(data.columns.values))
-# print(data['Tweet_index'].values)
-# print(data['Label'].values)
-# print(data['Tweet_text'].values)
-# print(data.dtypes)
+print_all(data)
 
 print("Aaaaaaa")
