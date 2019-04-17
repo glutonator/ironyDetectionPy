@@ -12,22 +12,25 @@ from preprocesing import clean_messages, print_all, tokenize_data, tokenize_data
 
 model = load_glove_model()
 
-tokenize_data_test()
-
+# tokenize_data_test()
+#
 data = load_input_data()
 
 clean_messages(data)
 
 tokenize_data(data)
 
-print(data['Tweet_text'][0])
-print(data.size)
-print(data.shape[0])
-print()
-print(model.get_vector('sweet'))
+# print(data['Tweet_text'][0])
+# print(data.size)
+# print(data.shape[0])
+# print()
+# print(model.get_vector('sweet'))
+#
+#TODO: ['we', 'are', 'rumored', 'to', 'have', 'talked', 'to', 'erv', 'agent', '...', 'and', 'the', 'angels', 'asked', 'about', 'ed', 'escobar', '...', "that's", 'hardly', 'nothing', ';)']
+#TODO: usunąć wielokropek
 
 translate_sentence_to_vectors(data, model)
-
-print_all(data)
+#
+# print_all(data)
 
 print("Aaaaaaa")
