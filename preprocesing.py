@@ -1,6 +1,7 @@
 from typing import List, Any, Union
 
 import nltk
+import pandas as pd
 from gensim.models.keyedvectors import Word2VecKeyedVectors
 from nltk import TweetTokenizer
 from pandas import DataFrame
@@ -106,6 +107,9 @@ def translate_sentence_to_vectors(data: DataFrame, model: Word2VecKeyedVectors):
                 list_of_not_found_words.append(j)
 
             data['Tweet_text'][i] = list_of_vectors
+
+    data.to_json('vector_test.txt')
+    # data.to_csv('vector_test.txt', encoding='utf-8', index=False)
     return list_of_not_found_words
 
 
