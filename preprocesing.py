@@ -18,14 +18,15 @@ def func(model):
 def clean_messages(data: DataFrame, model: Word2VecKeyedVectors):
     # remove urls
     data['Tweet_text'] = data['Tweet_text'].str \
-        .replace('(http|ftp|https)://([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?', '', regex=True)
+        .replace('(http|ftp|https)://([\\w_-]+(?:(?:\\.[\\w_-]+)+))([\\w.,@?^=%&:/~+#-]*[\\w@?^=%&/~+#-])?', '', regex=True)
 
     # remove nicks
     data['Tweet_text'] = data['Tweet_text'].str.replace('@[A-Za-z0-9]+', '', regex=True)
 
     # remove hashtags
     # data['Tweet_text'] = data['Tweet_text'].str.replace('\s([#][\w_-]+)', '', regex=True)
-    data['Tweet_text'] = data['Tweet_text'].str.replace('([#][\w_-]+)', '', regex=True)
+    # remove hastags also from the begging of sentence
+    data['Tweet_text'] = data['Tweet_text'].str.replace('([#][\\w_-]+)', '', regex=True)
 
     # convert to lowercase
     data['Tweet_text'] = data['Tweet_text'].str.lower()
@@ -36,7 +37,6 @@ def clean_messages(data: DataFrame, model: Word2VecKeyedVectors):
     for i in range(0, data.shape[0]):
         data['Tweet_text'][i] = list(cont.expand_texts([data['Tweet_text'][i]]))[-1]
         data['Tweet_text'] = data['Tweet_text'].str.lower()
-
 
     # TODO: dodać lemingi/streming by uciąć 's jeśli bedize z tym problem
 
