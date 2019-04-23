@@ -1,3 +1,6 @@
+from typing import Type
+
+import numpy
 import pandas as pd
 import numpy as np
 
@@ -29,16 +32,39 @@ print(dataY.dtypes)
 print(dataY.shape)
 print("___________________")
 
-# print(dataX)
-#
-# print(dataY)
+print(dataX)
+
+print(dataY)
+
+print("___________________")
+# xxxx: np.array = dataX['Tweet_text'].to_numpy(copy=True)
+# TODO: tutaj trzeba bedzie poprawić jak bede miał wiecej niz jeden element listy
+xxxx: Type[numpy.ndarray] = dataX['Tweet_text'].to_numpy(copy=True)
+print(xxxx)
+print(type(xxxx))
+XXXX = numpy.asarray(xxxx[0])
+print(XXXX)
+print(type(XXXX))
+print(XXXX.shape)
+XXXX = XXXX.reshape((1, 11, 25))
+
+print(XXXX.shape)
+
+for sentence in XXXX:
+    print(len(sentence))
+    for word in sentence:
+        print(len(word))
+
+# print(str(XXXX))
+# print(len(XXXX))
 
 # print(dataX.to_numpy())
 # print(dataY.to_numpy())
 
 model = Sequential()
 # model.add(LSTM(32, input_shape=(2, 10), return_sequences=True))
-model.add(LSTM(1, input_shape=(20, 1), return_sequences=False))
+model.add(LSTM(20, input_shape=(11, 25), return_sequences=False))
+model.add(Dense(1, activation='sigmoid'))
 # model.add(Dense(1))
 # model.add(Flatten())
 # model.add(Dense(2, activation='softmax'))
@@ -50,15 +76,16 @@ model.summary()
 model.compile(loss='binary_crossentropy', optimizer='adam')
 #
 
-xxxx = np.arange(20)
-xxxx = xxxx.reshape((1, 20, 1))
-print(xxxx.shape)
-yyyy = np.arange(1)
-# yyyy.reshape(20, 1, 1)
-print(yyyy.shape)
-print(yyyy)
+# xxxx = np.arange(20)
+# xxxx = xxxx.reshape((1, 20, 1))
+# print(xxxx.shape)
+# yyyy = np.arange(1)
+# # yyyy.reshape(20, 1, 1)
+# print(yyyy.shape)
+# print(yyyy)
 
-model.fit(xxxx, yyyy, epochs=100, batch_size=1, verbose=2)
+
+model.fit(XXXX, dataY, epochs=2, batch_size=1, verbose=2)
 
 # model.summary()
 
