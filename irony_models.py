@@ -40,15 +40,21 @@ print("___________________")
 # xxxx: np.array = dataX['Tweet_text'].to_numpy(copy=True)
 # TODO: tutaj trzeba bedzie poprawić jak bede miał wiecej niz jeden element listy
 xxxx: Type[numpy.ndarray] = dataX['Tweet_text'].to_numpy(copy=True)
-print(xxxx)
-print(type(xxxx))
+# print(xxxx)
+# print(type(xxxx))
 XXXX = numpy.asarray(xxxx[0])
-print(XXXX)
-print(type(XXXX))
-print(XXXX.shape)
+# print(XXXX)
+# print(type(XXXX))
+# print(XXXX.shape)
 XXXX = XXXX.reshape((1, 11, 25))
 
-print(XXXX.shape)
+# print(XXXX.shape)
+
+print("___________________")
+############
+##YYYYYYYY
+YYYY = numpy.array(dataY['Label'].values)
+print(YYYY.shape)
 
 for sentence in XXXX:
     print(len(sentence))
@@ -85,7 +91,7 @@ model.compile(loss='binary_crossentropy', optimizer='adam')
 # print(yyyy)
 
 
-model.fit(XXXX, dataY, epochs=2, batch_size=1, verbose=2)
+model.fit(XXXX, YYYY, epochs=2, batch_size=1, verbose=2)
 
 # model.summary()
 
