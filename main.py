@@ -9,18 +9,39 @@ import string
 
 from pandas import DataFrame
 
-from load_files import load_glove_model, load_input_data
-from preprocesing import clean_messages, print_all, tokenize_data, tokenize_data_test, translate_sentence_to_vectors
+from load_files import load_glove_model, load_input_data, save_output_data
+from preprocesing import clean_messages, tokenize_data, translate_sentence_to_vectors
 
-model = load_glove_model()
 
-# tokenize_data_test(model)
-#
-data: DataFrame = load_input_data()
-#
-clean_messages(data, model)
-#
-tokenize_data(data)
+def preprocess_data():
+    # wczytywanie modelu z plliku:
+    model = load_glove_model()
+    data: DataFrame = load_input_data('SemEval2018-T3-train-taskA.txt')
+    #
+    clean_messages(data, model)
+    # save to file
+    save_output_data(data, 'preprocessed_data_new.txt')
+
+
+def prepare_data_for_network():
+    model = load_glove_model()
+    print("model loaded")
+    # data: DataFrame = load_input_data('preprocessed_data_without_blanck_rows.txt')
+    data: DataFrame = load_input_data('preprocessed_data_without_611.txt')
+    # data: DataFrame = load_input_data('preprocessed_data.txt')
+    # data: DataFrame = load_input_data('xxx.txt')
+    print("data loaded")
+    tokenize_data(data)
+    print("tokenize_data finished")
+    list_of_not_found_words = translate_sentence_to_vectors(data, model, output_filename='vector_test.txt')
+    print("translate_sentence_to_vectors finished")
+    print("_________________________________")
+    print(list_of_not_found_words)
+    print("size:" + str(len(list_of_not_found_words)))
+
+
+# preprocess_data()
+prepare_data_for_network()
 
 # print(data['Tweet_text'][0])
 # print(data.size)
@@ -31,12 +52,6 @@ tokenize_data(data)
 # TODO: ['we', 'are', 'rumored', 'to', 'have', 'talked', 'to', 'erv', 'agent', '...', 'and', 'the', 'angels', 'asked', 'about', 'ed', 'escobar', '...', "that's", 'hardly', 'nothing', ';)']
 # TODO: usunąć wielokropek
 
-list_of_not_found_words = translate_sentence_to_vectors(data, model)
+# #
 #
-
-print("_________________________________")
-print(list_of_not_found_words)
-
-# print_all(data)
-#
-# print("Aaaaaaa")
+# # print_all(data)

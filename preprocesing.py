@@ -22,22 +22,29 @@ def clean_messages(data: DataFrame, model: Word2VecKeyedVectors):
         .replace('(http|ftp|https)://([\\w_-]+(?:(?:\\.[\\w_-]+)+))([\\w.,@?^=%&:/~+#-]*[\\w@?^=%&/~+#-])?', '', regex=True)
 
     # remove nicks
-    data['Tweet_text'] = data['Tweet_text'].str.replace('@[A-Za-z0-9]+', '', regex=True)
+    data['Tweet_text'] = data['Tweet_text'].str.replace('@[A-Za-z0-9_]+', '', regex=True)
 
     # remove hashtags
     # data['Tweet_text'] = data['Tweet_text'].str.replace('\s([#][\w_-]+)', '', regex=True)
     # remove hastags also from the begging of sentence
     data['Tweet_text'] = data['Tweet_text'].str.replace('([#][\\w_-]+)', '', regex=True)
 
-    # convert to lowercase
-    data['Tweet_text'] = data['Tweet_text'].str.lower()
+    #remove "|"
+    data['Tweet_text'] = data['Tweet_text'].str.replace('|', ' ', regex=False)
+
 
     # TODO: dodać tutaj to rozpoznawanie modelu z contractions i konwersje do długich form
     cont = Contractions(kv_model=model)
 
-    for i in range(0, data.shape[0]):
+    number_of_sentences = data.shape[0]
+    for i in range(0, number_of_sentences):
+        # print(list(cont.expand_texts([data['Tweet_text'][i]]))[-1])
         data['Tweet_text'][i] = list(cont.expand_texts([data['Tweet_text'][i]]))[-1]
-        data['Tweet_text'] = data['Tweet_text'].str.lower()
+        # data['Tweet_text'] = data['Tweet_text'].str.lower()
+
+    # convert to lowercase
+    data['Tweet_text'] = data['Tweet_text'].str.lower()
+
 
     # TODO: dodać lemingi/streming by uciąć 's jeśli bedize z tym problem
 
@@ -90,9 +97,12 @@ def tokenize_data_test(model):
 def tokenize_data(data):
     tknzr = TweetTokenizer()
     data['Tweet_text'] = data['Tweet_text'].apply(tknzr.tokenize)
+    # for i in range(0, data.shape[0]):
+    #     print(data['Tweet_text'][i])
+    #     data['Tweet_text'][i] = tknzr.tokenize(data['Tweet_text'][i])
 
 
-def translate_sentence_to_vectors(data: DataFrame, model: Word2VecKeyedVectors):
+def translate_sentence_to_vectors(data: DataFrame, model: Word2VecKeyedVectors, output_filename: str):
     list_of_not_found_words: List[str] = []
     for i in range(0, data.shape[0]):
         # print(data['Tweet_text'][i])
@@ -108,7 +118,8 @@ def translate_sentence_to_vectors(data: DataFrame, model: Word2VecKeyedVectors):
 
             data['Tweet_text'][i] = list_of_vectors
 
-    data.to_json('vector_test.txt')
+    data.to_json(output_filename)
+    # data.to_json('vector_test.txt')
     # data.to_csv('vector_test.txt', encoding='utf-8', index=False)
     return list_of_not_found_words
 
