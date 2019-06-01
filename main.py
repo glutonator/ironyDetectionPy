@@ -26,8 +26,8 @@ def preprocess_data():
 def prepare_data_for_network():
     model = load_glove_model()
     print("model loaded")
-    # data: DataFrame = load_input_data('preprocessed_data_without_blanck_rows.txt')
-    data: DataFrame = load_input_data('preprocessed_data_without_611.txt')
+    data: DataFrame = load_input_data('preprocessed_data_without_blanck_rows.txt')
+    # data: DataFrame = load_input_data('preprocessed_data_without_611.txt')
     # data: DataFrame = load_input_data('preprocessed_data.txt')
     # data: DataFrame = load_input_data('xxx.txt')
     print("data loaded")

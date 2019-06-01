@@ -14,7 +14,8 @@ from preprocesing import print_all
 
 import keras
 
-data: DataFrame = load_vectors()
+# data: DataFrame = load_vectors('vector_test_20.txt')
+data: DataFrame = load_vectors('vector_test_100.txt')
 print(data.dtypes)
 print("___________________")
 
@@ -26,7 +27,6 @@ dataY = data.drop(columns=['Tweet_index', 'Tweet_text'])
 
 print(dataX.dtypes)
 print(dataX.shape)
-# print(dataX['Tweet_text'].to_numpy())
 print("___________________")
 
 print(dataY.dtypes)
@@ -40,86 +40,57 @@ print(dataY)
 print("___________________")
 # xxxx: np.array = dataX['Tweet_text'].to_numpy(copy=True)
 # TODO: tutaj trzeba bedzie poprawić jak bede miał wiecej niz jeden element listy
-data_x_from_file: Type[numpy.ndarray] = dataX['Tweet_text'].to_numpy(copy=True)
-print(data_x_from_file)
-print(type(data_x_from_file))
+dataX_numpy: Type[numpy.ndarray] = dataX['Tweet_text'].to_numpy(copy=True)
+print(dataX_numpy)
+print(type(dataX_numpy))
 print("xxxxx")
 # print(len(xxxx))
-number_of_sentences = len(data_x_from_file)
+number_of_sentences = len(dataX_numpy)
 print(number_of_sentences)
 
 
-max_sentance_lenght = 15
-list_of_sentances = []
+max_sentence_length = 15
+list_of_sentences = []
 for sentence_index in range(0, number_of_sentences):
-    sentence = numpy.asarray(data_x_from_file[sentence_index])
+    sentence = numpy.asarray(dataX_numpy[sentence_index])
 
-    if len(sentence) < max_sentance_lenght:
-        while len(sentence) < max_sentance_lenght:
+    if len(sentence) < max_sentence_length:
+        while len(sentence) < max_sentence_length:
             zeros = np.array([np.zeros(25)])
             sentence = np.concatenate((sentence , zeros))
 
-        list_of_sentances.append(sentence)
+        list_of_sentences.append(sentence)
     else:
-        sentence = sentence[0:max_sentance_lenght]
-        list_of_sentances.append(sentence)
+        sentence = sentence[0:max_sentence_length]
+        list_of_sentences.append(sentence)
 
 
-
-print(list_of_sentances)
-arrayX = np.asarray(list_of_sentances)
+# print(list_of_sentences)
+dataX_numpy = np.asarray(list_of_sentences)
 # print(arrayX)
-print(arrayX.shape)
+print(dataX_numpy.shape)
 # arrayX.reshape((20, 20, 25))
-print(arrayX.shape)
+print(dataX_numpy.shape)
 
-# print(type(arrayX))
-# for a in arrayX:
-#     print(type(a))
-#     for b in a:
-#         print(b)
-#         print(type(b))
-#         print("&&&&&&")
 
-for sentence in arrayX:
-    print("sent:" + str(len(sentence)))
-    # for word in sentence:
-        # print(word)
-        # print(len(word))
-
-XXXX = numpy.asarray(data_x_from_file[0])
-# print(XXXX)
-# print(type(XXXX))
-print(XXXX.shape)
-XXXX = XXXX.reshape((1, 11, 25))
-
-# print(XXXX.shape)
 
 print("___________________")
 ############
 ##YYYYYYYY
-YYYY = numpy.array(dataY['Label'].values)
-print(YYYY.shape)
+dataY_numpy = numpy.array(dataY['Label'].values)
+print(dataY_numpy.shape)
 
-# for sentence in XXXX:
-#     print(len(sentence))
-#     for word in sentence:
-#         # print(word)
-#         print(len(word))
 
-# print(str(XXXX))
-# print(len(XXXX))
 
-# print(dataX.to_numpy())
-# print(dataY.to_numpy())
 #25 długoś wektora embediningow
 #11 dlugość zdania (licba wektoróœ
 #1 liczba zdan
 
+len_of_vector_embeddings = 25
 model = Sequential()
 # model.add(LSTM(32, input_shape=(2, 10), return_sequences=True))
 # model.add(LSTM(20, input_shape=(11, 25), return_sequences=False))
-model.add(LSTM(20, input_shape=(15, 25), return_sequences=False))
+model.add(LSTM(20, input_shape=(max_sentence_length, len_of_vector_embeddings), return_sequences=False))
 model.add(Dense(1, activation='sigmoid'))
 # model.add(Dense(1))
 # model.add(Flatten())
@@ -132,17 +103,9 @@ model.summary()
 model.compile(loss='binary_crossentropy', optimizer='adam')
 #
 
-# xxxx = np.arange(20)
-# xxxx = xxxx.reshape((1, 20, 1))
-# print(xxxx.shape)
-# yyyy = np.arange(1)
-# # yyyy.reshape(20, 1, 1)
-# print(yyyy.shape)
-# print(yyyy)
 
 
-# model.fit(XXXX, YYYY, epochs=2, batch_size=1, verbose=2)
-model.fit(arrayX, YYYY, epochs=2, batch_size=1, verbose=2)
+model.fit(dataX_numpy, dataY_numpy, epochs=2, batch_size=1, verbose=2)
 
 # model.summary()
 
