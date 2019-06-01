@@ -6,6 +6,7 @@ import numpy as np
 
 from keras import Sequential
 from keras.layers import LSTM, Dense, Flatten, AveragePooling1D
+from keras_preprocessing.sequence import pad_sequences
 from pandas import DataFrame
 
 from load_files import load_vectors
@@ -39,13 +40,57 @@ print(dataY)
 print("___________________")
 # xxxx: np.array = dataX['Tweet_text'].to_numpy(copy=True)
 # TODO: tutaj trzeba bedzie poprawić jak bede miał wiecej niz jeden element listy
-xxxx: Type[numpy.ndarray] = dataX['Tweet_text'].to_numpy(copy=True)
-# print(xxxx)
-# print(type(xxxx))
-XXXX = numpy.asarray(xxxx[0])
+data_x_from_file: Type[numpy.ndarray] = dataX['Tweet_text'].to_numpy(copy=True)
+print(data_x_from_file)
+print(type(data_x_from_file))
+print("xxxxx")
+# print(len(xxxx))
+number_of_sentences = len(data_x_from_file)
+print(number_of_sentences)
+
+
+max_sentance_lenght = 15
+list_of_sentances = []
+for sentence_index in range(0, number_of_sentences):
+    sentence = numpy.asarray(data_x_from_file[sentence_index])
+
+    if len(sentence) < max_sentance_lenght:
+        while len(sentence) < max_sentance_lenght:
+            zeros = np.array([np.zeros(25)])
+            sentence = np.concatenate((sentence , zeros))
+
+        list_of_sentances.append(sentence)
+    else:
+        sentence = sentence[0:max_sentance_lenght]
+        list_of_sentances.append(sentence)
+
+
+
+print(list_of_sentances)
+arrayX = np.asarray(list_of_sentances)
+# print(arrayX)
+print(arrayX.shape)
+# arrayX.reshape((20, 20, 25))
+print(arrayX.shape)
+
+# print(type(arrayX))
+# for a in arrayX:
+#     print(type(a))
+#     for b in a:
+#         print(b)
+#         print(type(b))
+#         print("&&&&&&")
+
+for sentence in arrayX:
+    print("sent:" + str(len(sentence)))
+    # for word in sentence:
+        # print(word)
+        # print(len(word))
+
+XXXX = numpy.asarray(data_x_from_file[0])
 # print(XXXX)
 # print(type(XXXX))
-# print(XXXX.shape)
+print(XXXX.shape)
 XXXX = XXXX.reshape((1, 11, 25))
 
 # print(XXXX.shape)
@@ -56,20 +101,25 @@ print("___________________")
 YYYY = numpy.array(dataY['Label'].values)
 print(YYYY.shape)
 
-for sentence in XXXX:
-    print(len(sentence))
-    for word in sentence:
-        print(len(word))
+# for sentence in XXXX:
+#     print(len(sentence))
+#     for word in sentence:
+#         # print(word)
+#         print(len(word))
 
 # print(str(XXXX))
 # print(len(XXXX))
 
 # print(dataX.to_numpy())
 # print(dataY.to_numpy())
+#25 długoś wektora embediningow
+#11 dlugość zdania (licba wektoróœ
+#1 liczba zdan
 
 model = Sequential()
 # model.add(LSTM(32, input_shape=(2, 10), return_sequences=True))
-model.add(LSTM(20, input_shape=(11, 25), return_sequences=False))
+# model.add(LSTM(20, input_shape=(11, 25), return_sequences=False))
+model.add(LSTM(20, input_shape=(15, 25), return_sequences=False))
 model.add(Dense(1, activation='sigmoid'))
 # model.add(Dense(1))
 # model.add(Flatten())
@@ -91,7 +141,8 @@ model.compile(loss='binary_crossentropy', optimizer='adam')
 # print(yyyy)
 
 
-model.fit(XXXX, YYYY, epochs=2, batch_size=1, verbose=2)
+# model.fit(XXXX, YYYY, epochs=2, batch_size=1, verbose=2)
+model.fit(arrayX, YYYY, epochs=2, batch_size=1, verbose=2)
 
 # model.summary()
 

@@ -32,7 +32,7 @@ def clean_messages(data: DataFrame, model: Word2VecKeyedVectors):
     # convert to lowercase
     data['Tweet_text'] = data['Tweet_text'].str.lower()
 
-    # TODO: dodać tutaj to rozpoznawanie modelu z contractions i kowersje do długich form
+    # TODO: dodać tutaj to rozpoznawanie modelu z contractions i konwersje do długich form
     cont = Contractions(kv_model=model)
 
     for i in range(0, data.shape[0]):
