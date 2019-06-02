@@ -1,4 +1,4 @@
-import numpy as np
+import numpy as nplen_of_vector_embeddings
 import pandas as pd
 from gensim.models import word2vec
 from gensim.models import KeyedVectors
