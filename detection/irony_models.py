@@ -3,9 +3,20 @@ import os
 
 import keras
 from keras import Sequential
-from keras.layers import LSTM, Dense, Dropout, Bidirectional
+from keras.layers import LSTM, Dense, Dropout, Bidirectional, Flatten
 
 from detection.my_plots import generate_plots
+
+
+def give_model_00(len_of_vector_embeddings, max_sentence_length):
+    model: Sequential = Sequential()
+    model.add(Dense(20, input_shape=(max_sentence_length, len_of_vector_embeddings)))
+    # model.add(Dense(40))
+    model.add(Flatten())
+    model.add(Dense(1, activation='sigmoid'))
+
+    function_name = inspect.currentframe().f_code.co_name
+    return model, function_name
 
 
 def give_model_10(len_of_vector_embeddings, max_sentence_length):
@@ -67,8 +78,9 @@ def give_model_60(len_of_vector_embeddings, max_sentence_length):
     function_name = inspect.currentframe().f_code.co_name
     return model, function_name
 
+
 ##################################################
-#lstm vs bi_lstm
+# lstm vs bi_lstm
 def give_model_41(len_of_vector_embeddings, max_sentence_length):
     model: Sequential = Sequential()
     model.add(LSTM(20, input_shape=(max_sentence_length, len_of_vector_embeddings), return_sequences=True))
@@ -80,6 +92,7 @@ def give_model_41(len_of_vector_embeddings, max_sentence_length):
     model.add(Dense(1, activation='sigmoid'))
     function_name = inspect.currentframe().f_code.co_name
     return model, function_name
+
 
 def give_model_61(len_of_vector_embeddings, max_sentence_length):
     model: Sequential = Sequential()
@@ -93,6 +106,7 @@ def give_model_61(len_of_vector_embeddings, max_sentence_length):
     model.add(Dense(1, activation='sigmoid'))
     function_name = inspect.currentframe().f_code.co_name
     return model, function_name
+
 
 ####################################################################################
 def give_model_X(len_of_vector_embeddings, max_sentence_length):
@@ -127,7 +141,7 @@ def give_model_testing(len_of_vector_embeddings, max_sentence_length):
     return model, function_name
 
 
-def train_model(model: Sequential, X_train, X_test, Y_train, Y_test, path):
+def train_model(model: Sequential, X_train, X_val, X_test, Y_train, Y_val, Y_test, path):
     gen_report(model, path, "report.txt")
     file_with_model_weights = "weights.best.hdf5"
 
@@ -138,15 +152,18 @@ def train_model(model: Sequential, X_train, X_test, Y_train, Y_test, path):
                                                 save_best_only=True)
     early_stop = keras.callbacks.EarlyStopping(monitor='val_loss', min_delta=0, patience=10, verbose=0)
 
-    results = model.fit(X_train, Y_train, validation_split=0.2,
+    # results = model.fit(X_train, Y_train, validation_split=0.2,
+    #                     callbacks=[early_stop, save_best], epochs=40, batch_size=10,
+    #                     verbose=0)
+    results = model.fit(X_train, Y_train, validation_data=(X_val, Y_val),
                         callbacks=[early_stop, save_best], epochs=40, batch_size=10,
                         verbose=0)
-
     generate_plots(results, path)
     scores = model.evaluate(X_test, Y_test, verbose=1)
     save_scores_to_file(model.metrics_names, scores, path, "test_last_scores.txt")
     # print(model.metrics_names)
     # print(scores)
+
 
 def train_model_learing_rate(model: Sequential, X_train, X_test, Y_train, Y_test, path, lr):
     gen_report(model, path, "report.txt")
@@ -169,7 +186,6 @@ def train_model_learing_rate(model: Sequential, X_train, X_test, Y_train, Y_test
     save_scores_to_file(model.metrics_names, scores, path, "test_last_scores.txt")
     # print(model.metrics_names)
     # print(scores)
-
 
 
 def eval_model(model, X_test, Y_test, path):
