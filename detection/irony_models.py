@@ -165,7 +165,7 @@ def train_model(model: Sequential, X_train, X_val, X_test, Y_train, Y_val, Y_tes
     # print(scores)
 
 
-def train_model_learing_rate(model: Sequential, X_train, X_test, Y_train, Y_test, path, lr):
+def train_model_learing_rate(model: Sequential, X_train, X_val, X_test, Y_train, Y_val, Y_test, path, lr):
     gen_report(model, path, "report.txt")
     file_with_model_weights = "weights.best.hdf5"
 
@@ -175,10 +175,10 @@ def train_model_learing_rate(model: Sequential, X_train, X_test, Y_train, Y_test
 
     save_best = keras.callbacks.ModelCheckpoint(path + file_with_model_weights, monitor='val_loss', verbose=0,
                                                 save_best_only=True)
-    early_stop = keras.callbacks.EarlyStopping(monitor='val_loss', min_delta=0, patience=10, verbose=0)
+    # early_stop = keras.callbacks.EarlyStopping(monitor='val_loss', min_delta=0, patience=10, verbose=0)
 
-    results = model.fit(X_train, Y_train, validation_split=0.2,
-                        callbacks=[early_stop, save_best], epochs=40, batch_size=10,
+    results = model.fit(X_train, Y_train, validation_data=(X_val, Y_val),
+                        callbacks=[save_best], epochs=50, batch_size=5,
                         verbose=0)
 
     generate_plots(results, path)
