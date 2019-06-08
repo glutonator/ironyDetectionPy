@@ -3,9 +3,9 @@ from gensim.models import KeyedVectors
 from gensim.models.keyedvectors import Word2VecKeyedVectors
 
 
-def load_glove_model() -> Word2VecKeyedVectors:
+def load_glove_model(filename:str) -> Word2VecKeyedVectors:
     # load the Stanford GloVe model
-    filename = 'word2vec.txt'
+    # filename = 'word2vec.txt'
     model = KeyedVectors.load_word2vec_format(filename, binary=False)
     return model
 

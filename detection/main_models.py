@@ -8,7 +8,7 @@ from detection.data_inputs import give_data
 
 # init
 max_sentence_length = 20
-len_of_vector_embeddings = 25
+len_of_vector_embeddings = 50
 X_train, X_val, X_test, Y_train, Y_val, Y_test = give_data(len_of_vector_embeddings, max_sentence_length)
 global_path_to_results = "results/"
 ts = str(round(time.time()))

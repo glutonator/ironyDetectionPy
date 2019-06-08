@@ -11,6 +11,8 @@ from detection.my_plots import generate_plots
 def give_model_00(len_of_vector_embeddings, max_sentence_length):
     model: Sequential = Sequential()
     model.add(Dense(20, input_shape=(max_sentence_length, len_of_vector_embeddings)))
+    # model.add(Dense(20))
+    # model.add(Dense(20))
     # model.add(Dense(40))
     model.add(Flatten())
     model.add(Dense(1, activation='sigmoid'))
@@ -178,7 +180,7 @@ def train_model_learing_rate(model: Sequential, X_train, X_val, X_test, Y_train,
     # early_stop = keras.callbacks.EarlyStopping(monitor='val_loss', min_delta=0, patience=10, verbose=0)
 
     results = model.fit(X_train, Y_train, validation_data=(X_val, Y_val),
-                        callbacks=[save_best], epochs=50, batch_size=5,
+                        callbacks=[save_best], epochs=100, batch_size=5,
                         verbose=0)
 
     generate_plots(results, path)

@@ -24,7 +24,7 @@ def preprocess_data():
 
 
 def prepare_data_for_network():
-    model = load_glove_model()
+    model = load_glove_model('word2vec_50.txt')
     print("model loaded")
     data: DataFrame = load_input_data('preprocessed_data_without_blanck_rows.txt')
     # data: DataFrame = load_input_data('preprocessed_data_without_611.txt')
@@ -33,7 +33,7 @@ def prepare_data_for_network():
     print("data loaded")
     tokenize_data(data)
     print("tokenize_data finished")
-    list_of_not_found_words = translate_sentence_to_vectors(data, model, output_filename='vector_test.txt')
+    list_of_not_found_words = translate_sentence_to_vectors(data, model, output_filename='vector_test_glove_50.txt')
     print("translate_sentence_to_vectors finished")
     print("_________________________________")
     print(list_of_not_found_words)
