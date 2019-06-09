@@ -3,27 +3,53 @@ import os
 
 import keras
 from keras import Sequential
-from keras.layers import LSTM, Dense, Dropout, Bidirectional, Flatten
+from keras.layers import LSTM, Dense, Dropout, Bidirectional
+from sklearn import svm
+from sklearn.metrics import accuracy_score
 
 from detection.my_plots import generate_plots
 
 
-def give_model_00(len_of_vector_embeddings, max_sentence_length):
-    model: Sequential = Sequential()
-    model.add(Dense(20, input_shape=(max_sentence_length, len_of_vector_embeddings)))
-    # model.add(Dense(20))
-    # model.add(Dense(20))
-    # model.add(Dense(40))
-    model.add(Flatten())
-    model.add(Dense(1, activation='sigmoid'))
+def baseline_00(X_train, X_val, X_test, Y_train, Y_val, Y_test):
+    clf = svm.SVC(gamma='scale')
+    # clf = svm.SVC(gamma='scale', kernel='poly', degree=2)
+    dataset_size = len(X_train)
+    TwoDim_dataset = X_train.reshape(dataset_size, -1)
+    clf.fit(TwoDim_dataset, Y_train)
+    # SVC(C=1.0, cache_size=200, class_weight=None, coef0=0.0,
+    #     decision_function_shape='ovr', degree=3, gamma='scale', kernel='rbf',
+    #     max_iter=-1, probability=False, random_state=None, shrinking=True,
+    #     tol=0.001, verbose=False)
 
-    function_name = inspect.currentframe().f_code.co_name
-    return model, function_name
+    X_val_reshape = X_val.reshape(len(X_val), -1)
+    y_pred_val = clf.predict(X_val_reshape)
+    print("accuracy_score_val")
+    print(accuracy_score(Y_val, y_pred_val))
+
+    X_test_reshape = X_test.reshape(len(X_test), -1)
+    y_pred_test = clf.predict(X_test_reshape)
+    print("accuracy_score_test")
+    print(accuracy_score(Y_test, y_pred_test))
+
+
+
+# def give_model_00(len_of_vector_embeddings, max_sentence_length):
+#     model: Sequential = Sequential()
+#     model.add(Dense(20, input_shape=(max_sentence_length, len_of_vector_embeddings)))
+#     # model.add(Dense(20))
+#     # model.add(Dense(20))
+#     # model.add(Dense(40))
+#     model.add(Flatten())
+#     model.add(Dense(1, activation='sigmoid'))
+#
+#     function_name = inspect.currentframe().f_code.co_name
+#     return model, function_name
 
 
 def give_model_10(len_of_vector_embeddings, max_sentence_length):
     model: Sequential = Sequential()
     model.add(LSTM(10, input_shape=(max_sentence_length, len_of_vector_embeddings), return_sequences=False))
+    model.add(Dense(5, activation='sigmoid'))
     model.add(Dense(1, activation='sigmoid'))
     function_name = inspect.currentframe().f_code.co_name
     return model, function_name
@@ -32,6 +58,7 @@ def give_model_10(len_of_vector_embeddings, max_sentence_length):
 def give_model_20(len_of_vector_embeddings, max_sentence_length):
     model: Sequential = Sequential()
     model.add(LSTM(20, input_shape=(max_sentence_length, len_of_vector_embeddings), return_sequences=False))
+    model.add(Dense(10, activation='sigmoid'))
     model.add(Dense(1, activation='sigmoid'))
     function_name = inspect.currentframe().f_code.co_name
     return model, function_name
@@ -41,6 +68,7 @@ def give_model_30(len_of_vector_embeddings, max_sentence_length):
     model: Sequential = Sequential()
     model.add(LSTM(20, input_shape=(max_sentence_length, len_of_vector_embeddings), return_sequences=True))
     model.add(LSTM(20, return_sequences=False))
+    model.add(Dense(10, activation='sigmoid'))
     model.add(Dense(1, activation='sigmoid'))
     function_name = inspect.currentframe().f_code.co_name
     return model, function_name
@@ -52,6 +80,7 @@ def give_model_40(len_of_vector_embeddings, max_sentence_length):
     model.add(Dropout(0.2))
     model.add(LSTM(20, return_sequences=False))
     model.add(Dropout(0.2))
+    model.add(Dense(10, activation='sigmoid'))
     model.add(Dense(1, activation='sigmoid'))
     function_name = inspect.currentframe().f_code.co_name
     return model, function_name
@@ -64,6 +93,7 @@ def give_model_50(len_of_vector_embeddings, max_sentence_length):
     model.add(Dropout(0.2))
     model.add(Bidirectional(LSTM(10, return_sequences=False)))
     model.add(Dropout(0.2))
+    model.add(Dense(10, activation='sigmoid'))
     model.add(Dense(1, activation='sigmoid'))
     function_name = inspect.currentframe().f_code.co_name
     return model, function_name
@@ -76,6 +106,7 @@ def give_model_60(len_of_vector_embeddings, max_sentence_length):
     model.add(Dropout(0.2))
     model.add(Bidirectional(LSTM(20, return_sequences=False)))
     model.add(Dropout(0.2))
+    model.add(Dense(10, activation='sigmoid'))
     model.add(Dense(1, activation='sigmoid'))
     function_name = inspect.currentframe().f_code.co_name
     return model, function_name
@@ -91,6 +122,7 @@ def give_model_41(len_of_vector_embeddings, max_sentence_length):
     model.add(Dropout(0.2))
     model.add(LSTM(20, return_sequences=False))
     model.add(Dropout(0.2))
+    model.add(Dense(10, activation='sigmoid'))
     model.add(Dense(1, activation='sigmoid'))
     function_name = inspect.currentframe().f_code.co_name
     return model, function_name
@@ -105,43 +137,13 @@ def give_model_61(len_of_vector_embeddings, max_sentence_length):
     model.add(Dropout(0.2))
     model.add(Bidirectional(LSTM(20, return_sequences=False)))
     model.add(Dropout(0.2))
+    model.add(Dense(10, activation='sigmoid'))
     model.add(Dense(1, activation='sigmoid'))
     function_name = inspect.currentframe().f_code.co_name
     return model, function_name
 
 
 ####################################################################################
-def give_model_X(len_of_vector_embeddings, max_sentence_length):
-    model: Sequential = Sequential()
-    model.add(LSTM(20, input_shape=(max_sentence_length, len_of_vector_embeddings), return_sequences=True))
-    model.add(Dropout(0.2))
-    model.add(LSTM(20, return_sequences=False))
-    model.add(Dropout(0.2))
-    model.add(Dense(1, activation='sigmoid'))
-    function_name = inspect.currentframe().f_code.co_name
-    return model, function_name
-
-
-def give_model_testing(len_of_vector_embeddings, max_sentence_length):
-    # path = "results/"
-    model: Sequential = Sequential()
-    # model.add(LSTM(32, input_shape=(2, 10), return_sequences=True))
-    # model.add(LSTM(20, input_shape=(11, 25), return_sequences=False))
-    # model.add(LSTM(20, input_shape=(max_sentence_length, len_of_vector_embeddings), return_sequences=False))
-    # model.add(LSTM(50, input_shape=(max_sentence_length, len_of_vector_embeddings), return_sequences=True))
-    model.add(
-        Bidirectional(LSTM(10, return_sequences=True), input_shape=(max_sentence_length, len_of_vector_embeddings)))
-    model.add(Dropout(0.2))
-    model.add(Bidirectional(LSTM(10, return_sequences=False)))
-    # model.add(LSTM(20, return_sequences=False))
-    model.add(Dropout(0.2))
-    model.add(Dense(1, activation='sigmoid'))
-
-    # get function name
-    function_name = inspect.currentframe().f_code.co_name
-
-    return model, function_name
-
 
 def train_model(model: Sequential, X_train, X_val, X_test, Y_train, Y_val, Y_test, path):
     gen_report(model, path, "report.txt")
@@ -177,10 +179,12 @@ def train_model_learing_rate(model: Sequential, X_train, X_val, X_test, Y_train,
 
     save_best = keras.callbacks.ModelCheckpoint(path + file_with_model_weights, monitor='val_loss', verbose=0,
                                                 save_best_only=True)
-    # early_stop = keras.callbacks.EarlyStopping(monitor='val_loss', min_delta=0, patience=10, verbose=0)
+    early_stop = keras.callbacks.EarlyStopping(monitor='val_loss', min_delta=0, patience=10, verbose=0)
 
+    # cb = [early_stop, save_best]
+    cb = [save_best]
     results = model.fit(X_train, Y_train, validation_data=(X_val, Y_val),
-                        callbacks=[save_best], epochs=100, batch_size=5,
+                        callbacks=cb, epochs=100, batch_size=5,
                         verbose=0)
 
     generate_plots(results, path)
