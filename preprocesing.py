@@ -1,7 +1,9 @@
+import re
 from typing import List, Any, Union
 
 import nltk
 import pandas as pd
+import wordninja
 from gensim.models.keyedvectors import Word2VecKeyedVectors
 from nltk import TweetTokenizer
 from pandas import DataFrame
@@ -19,7 +21,8 @@ def func(model):
 def clean_messages(data: DataFrame, model: Word2VecKeyedVectors):
     # remove urls
     data['Tweet_text'] = data['Tweet_text'].str \
-        .replace('(http|ftp|https)://([\\w_-]+(?:(?:\\.[\\w_-]+)+))([\\w.,@?^=%&:/~+#-]*[\\w@?^=%&/~+#-])?', '', regex=True)
+        .replace('(http|ftp|https)://([\\w_-]+(?:(?:\\.[\\w_-]+)+))([\\w.,@?^=%&:/~+#-]*[\\w@?^=%&/~+#-])?', '',
+                 regex=True)
 
     # remove nicks
     data['Tweet_text'] = data['Tweet_text'].str.replace('@[A-Za-z0-9_]+', '', regex=True)
@@ -27,11 +30,22 @@ def clean_messages(data: DataFrame, model: Word2VecKeyedVectors):
     # remove hashtags
     # data['Tweet_text'] = data['Tweet_text'].str.replace('\s([#][\w_-]+)', '', regex=True)
     # remove hastags also from the begging of sentence
-    data['Tweet_text'] = data['Tweet_text'].str.replace('([#][\\w_-]+)', '', regex=True)
+    # data['Tweet_text'] = data['Tweet_text'].str.replace('([#][\\w_-]+)', '', regex=True)
 
-    #remove "|"
+    # replace hashtags
+    parseHashtags(data)
+
+    # replace time
+    data['Tweet_text'] = data['Tweet_text'].str.replace('\\d+:\\d+', ' time ', regex=True)
+
+    # replace number
+    data['Tweet_text'] = data['Tweet_text'].str.replace('\\d+', ' number ', regex=True)
+
+    # remove '"'
+    data['Tweet_text'] = data['Tweet_text'].str.replace('"', ' ', regex=True)
+
+    # remove "|"
     data['Tweet_text'] = data['Tweet_text'].str.replace('|', ' ', regex=False)
-
 
     # TODO: dodać tutaj to rozpoznawanie modelu z contractions i konwersje do długich form
     cont = Contractions(kv_model=model)
@@ -45,7 +59,6 @@ def clean_messages(data: DataFrame, model: Word2VecKeyedVectors):
     # convert to lowercase
     data['Tweet_text'] = data['Tweet_text'].str.lower()
 
-
     # TODO: dodać lemingi/streming by uciąć 's jeśli bedize z tym problem
 
     # remove punctuation
@@ -54,6 +67,36 @@ def clean_messages(data: DataFrame, model: Word2VecKeyedVectors):
 
     # TODO:  KeyError: "word 'erv's' not in vocabulary"
     # data['Tweet_text'] = data['Tweet_text'].str.replace(rf'[{string.punctuation}]', '')
+
+
+def parseHashtags(data: DataFrame, ):
+    number_of_sentences = data.shape[0]
+    for i in range(0, number_of_sentences):
+        # print(list(cont.expand_texts([data['Tweet_text'][i]]))[-1])
+        sent: str = data['Tweet_text'][i]
+
+        # check if hashtag in sentace
+        if bool(re.search('([#][\\w_-]+)', sent)):
+            # print(sent)
+            sent = sent.split()
+            new_sent = []
+
+            for word in sent:
+                # print(word)
+                isHashtag = bool(re.match('([#][\w_-]+)', word))
+                if isHashtag:
+                    hashtagWord = wordninja.split(word)
+                    # begin string
+                    new_sent.append("#")
+                    for innerWord in hashtagWord:
+                        new_sent.append(innerWord)
+                    # end string
+                    new_sent.append("@")
+                else:
+                    new_sent.append(word)
+
+            data['Tweet_text'][i] = " ".join(new_sent)
+    print("hashtags Relaced")
 
 
 def tokenize_data_test(model):

@@ -15,7 +15,7 @@ from preprocesing import clean_messages, tokenize_data, translate_sentence_to_ve
 
 def preprocess_data():
     # wczytywanie modelu z plliku:
-    model = load_glove_model()
+    model = load_glove_model('word2vec.txt')
     data: DataFrame = load_input_data('SemEval2018-T3-train-taskA.txt')
     #
     clean_messages(data, model)
@@ -40,8 +40,8 @@ def prepare_data_for_network():
     print("size:" + str(len(list_of_not_found_words)))
 
 
-# preprocess_data()
-prepare_data_for_network()
+preprocess_data()
+# prepare_data_for_network()
 
 # print(data['Tweet_text'][0])
 # print(data.size)
