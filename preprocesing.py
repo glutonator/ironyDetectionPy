@@ -10,7 +10,9 @@ from pandas import DataFrame
 from pandas.core.arrays import ExtensionArray
 
 from pycontractions import Contractions
+from sklearn.preprocessing import LabelEncoder, OneHotEncoder
 
+import numpy as np
 
 def func(model):
     # calculate: (king - man) + woman = ?
@@ -145,25 +147,37 @@ def tokenize_data(data):
     #     data['Tweet_text'][i] = tknzr.tokenize(data['Tweet_text'][i])
 
 
-def translate_sentence_to_vectors(data: DataFrame, model: Word2VecKeyedVectors, output_filename: str):
+def translate_sentence_to_vectors(data: DataFrame, model: Word2VecKeyedVectors,
+                                  output_filename: str, label_encoder: LabelEncoder,
+                                  onehot_encoder: OneHotEncoder):
     list_of_not_found_words: List[str] = []
     for i in range(0, data.shape[0]):
-        # print(data['Tweet_text'][i])
         list_of_vectors = []
-        for j in data['Tweet_text'][i]:
-            # print(j)
-            try:
-                list_of_vectors.append(model.get_vector(j))
-                # print(model.get_vector(j))
-            except KeyError:
-                # print(j)
-                list_of_not_found_words.append(j)
 
-            data['Tweet_text'][i] = list_of_vectors
+        # add postags
+        list_of_tokens_in_sentance = data['Tweet_text'][i]
+        list_of_tuples_of_tokens_and_tags = nltk.pos_tag(list_of_tokens_in_sentance)
+        list_of_tags_in_order_in_sentance = [i[1] for i in list_of_tuples_of_tokens_and_tags]
+
+        list_of_tags_in_order_in_sentance_in_numeric_labels = label_encoder.transform(list_of_tags_in_order_in_sentance)
+        list_of_tags_in_order_in_sentance_in_numeric_labels = list_of_tags_in_order_in_sentance_in_numeric_labels.reshape(len(list_of_tags_in_order_in_sentance_in_numeric_labels), 1)
+        list_of_tags_in_order_in_sentance_in_onehot_encoded = onehot_encoder.transform(list_of_tags_in_order_in_sentance_in_numeric_labels)
+
+        count = 0
+        for word_token in data['Tweet_text'][i]:
+            try:
+                vector_from_word = model.get_vector(word_token)
+                # add postags
+                vector_onehot_encoded = list_of_tags_in_order_in_sentance_in_onehot_encoded[count]
+                list_of_vectors.append(np.append(vector_from_word, vector_onehot_encoded))
+            except KeyError:
+                list_of_not_found_words.append(word_token)
+
+            count = count + 1
+
+        data['Tweet_text'][i] = list_of_vectors
 
     data.to_json(output_filename)
-    # data.to_json('vector_test.txt')
-    # data.to_csv('vector_test.txt', encoding='utf-8', index=False)
     return list_of_not_found_words
 
 
