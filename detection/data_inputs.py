@@ -12,7 +12,9 @@ from load_files import load_vectors
 def give_data(len_of_vector_embeddings, max_sentence_length):
     # data: DataFrame = load_vectors('vector_test_full_good_01_06_2019.txt')
     # data: DataFrame = load_vectors('vector_test_glove_full_25.txt')
-    data: DataFrame = load_vectors('vector_test_glove_full_50.txt')
+    # data: DataFrame = load_vectors('vector_test_glove_full_50.txt')
+    # data: DataFrame = load_vectors('vector_test_new_glove_50.txt')
+    data: DataFrame = load_vectors('vector_test_new_glove_200.txt')
 
     # # vector
     dataX = data.drop(columns=['Tweet_index', 'Label'])

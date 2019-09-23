@@ -27,7 +27,7 @@ def clean_messages(data: DataFrame, model: Word2VecKeyedVectors):
                  regex=True)
 
     # remove nicks
-    data['Tweet_text'] = data['Tweet_text'].str.replace('@[A-Za-z0-9_]+', '', regex=True)
+    data['Tweet_text'] = data['Tweet_text'].str.replace('@[A-Za-z0-9_]+', ' @ username @ ', regex=True)
 
     # remove hashtags
     # data['Tweet_text'] = data['Tweet_text'].str.replace('\s([#][\w_-]+)', '', regex=True)
@@ -57,6 +57,8 @@ def clean_messages(data: DataFrame, model: Word2VecKeyedVectors):
         # print(list(cont.expand_texts([data['Tweet_text'][i]]))[-1])
         data['Tweet_text'][i] = list(cont.expand_texts([data['Tweet_text'][i]]))[-1]
         # data['Tweet_text'] = data['Tweet_text'].str.lower()
+
+    print('Contractions finished')
 
     # convert to lowercase
     data['Tweet_text'] = data['Tweet_text'].str.lower()
@@ -93,7 +95,7 @@ def parseHashtags(data: DataFrame, ):
                     for innerWord in hashtagWord:
                         new_sent.append(innerWord)
                     # end string
-                    new_sent.append("@")
+                    new_sent.append("*")
                 else:
                     new_sent.append(word)
 
@@ -150,6 +152,8 @@ def tokenize_data(data):
 def translate_sentence_to_vectors(data: DataFrame, model: Word2VecKeyedVectors,
                                   output_filename: str, label_encoder: LabelEncoder,
                                   onehot_encoder: OneHotEncoder):
+    # silence warnings
+    pd.set_option('mode.chained_assignment', None)
     list_of_not_found_words: List[str] = []
     for i in range(0, data.shape[0]):
         list_of_vectors = []
@@ -164,6 +168,7 @@ def translate_sentence_to_vectors(data: DataFrame, model: Word2VecKeyedVectors,
         list_of_tags_in_order_in_sentance_in_onehot_encoded = onehot_encoder.transform(list_of_tags_in_order_in_sentance_in_numeric_labels)
 
         count = 0
+        print(data['Tweet_text'][i])
         for word_token in data['Tweet_text'][i]:
             try:
                 vector_from_word = model.get_vector(word_token)
@@ -187,3 +192,26 @@ def print_all(data):
     print(data['Label'].values)
     print(data['Tweet_text'].values)
     print(data.dtypes)
+
+
+def create_encoders():
+    list_of_pos_tags = []
+    with open('pos_tags.txt', 'r') as f:
+        for line in f:
+            line = line.rstrip()
+            print(line)
+            list_of_pos_tags.append(line)
+            # Do something with 'line'
+
+    print(list_of_pos_tags)
+
+    label_encoder = LabelEncoder()
+    integer_encoded = label_encoder.fit_transform(list_of_pos_tags)
+    print(integer_encoded)
+
+    onehot_encoder = OneHotEncoder(sparse=False)
+    integer_encoded = integer_encoded.reshape(len(integer_encoded), 1)
+    onehot_encoded = onehot_encoder.fit_transform(integer_encoded)
+
+    return label_encoder, onehot_encoder
+

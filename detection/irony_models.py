@@ -186,6 +186,10 @@ def train_model_learing_rate(model: Sequential, X_train, X_val, X_test, Y_train,
     results = model.fit(X_train, Y_train, validation_data=(X_val, Y_val),
                         callbacks=cb, epochs=100, batch_size=5,
                         verbose=0)
+    #todo: change to old value of epochs = 100
+    # results = model.fit(X_train, Y_train, validation_data=(X_val, Y_val),
+    #                     callbacks=cb, epochs=10, batch_size=5,
+    #                     verbose=0)
 
     generate_plots(results, path)
     scores = model.evaluate(X_test, Y_test, verbose=1)
