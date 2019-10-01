@@ -1,6 +1,8 @@
 import pandas as pd
 from gensim.models import KeyedVectors
 from gensim.models.keyedvectors import Word2VecKeyedVectors
+from gensim.models.wrappers import FastText
+
 
 
 def load_glove_model(filename:str) -> Word2VecKeyedVectors:
@@ -8,6 +10,15 @@ def load_glove_model(filename:str) -> Word2VecKeyedVectors:
     # filename = 'word2vec.txt'
     model = KeyedVectors.load_word2vec_format(filename, binary=False)
     return model
+
+def load_FastText_model(filename:str) -> Word2VecKeyedVectors:
+    # load the Stanford GloVe model
+    # filename = 'word2vec.txt'
+    # model = FastText.load_fasttext_format('wiki-news-300d-1M.vec')
+    model = KeyedVectors.load_word2vec_format(filename, binary=False)
+
+    return model
+
 
 
 def load_input_data(filename: str) -> pd.DataFrame:

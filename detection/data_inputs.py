@@ -7,14 +7,16 @@ from pandas import DataFrame
 from sklearn.model_selection import train_test_split
 
 from load_files import load_vectors
-
+from collections import Counter
 
 def give_data(len_of_vector_embeddings, max_sentence_length):
     # data: DataFrame = load_vectors('vector_test_full_good_01_06_2019.txt')
     # data: DataFrame = load_vectors('vector_test_glove_full_25.txt')
     # data: DataFrame = load_vectors('vector_test_glove_full_50.txt')
     # data: DataFrame = load_vectors('vector_test_new_glove_50.txt')
-    data: DataFrame = load_vectors('vector_test_new_glove_200.txt')
+    # data: DataFrame = load_vectors('vector_test_new_glove_200.txt')
+    # data: DataFrame = load_vectors('vector_test_new_glove_merged_200.txt')
+    data: DataFrame = load_vectors('vector_test_fast_text_merged.txt')
 
     # # vector
     dataX = data.drop(columns=['Tweet_index', 'Label'])
@@ -23,6 +25,8 @@ def give_data(len_of_vector_embeddings, max_sentence_length):
 
     dataX_numpy: Type[numpy.ndarray] = dataX['Tweet_text'].to_numpy(copy=True)
     number_of_sentences = len(dataX_numpy)
+
+    count_of_list_of_sentences = []
 
     # maksymalna dlugość zdania
     # max_sentence_length = 15
@@ -35,6 +39,7 @@ def give_data(len_of_vector_embeddings, max_sentence_length):
         # print(str(sentence_index) + " " + str(max_len))
         # if(len(sentence)>20):
         #     print(str(sentence_index) + " " + str(len(sentence)))
+        count_of_list_of_sentences.append(""+str(len(sentence)))
 
         if len(sentence) < max_sentence_length:
             while len(sentence) < max_sentence_length:
@@ -47,6 +52,10 @@ def give_data(len_of_vector_embeddings, max_sentence_length):
         else:
             sentence = sentence[0:max_sentence_length]
             list_of_sentences.append(sentence)
+
+    print("##############")
+    print("count_of_list_of_sentences")
+    print(Counter(count_of_list_of_sentences))
 
     dataX_numpy = np.asarray(list_of_sentences)
     dataY_numpy = numpy.array(dataY['Label'].values)
