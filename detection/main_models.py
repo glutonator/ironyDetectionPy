@@ -36,7 +36,8 @@ models: List[Sequential] = []
 # models.append(di.give_model_61(total_length, max_sentence_length))
 
 
-models.append(di.give_model_50000(total_length, max_sentence_length))
+# models.append(di.give_model_50000(total_length, max_sentence_length))
+models.append(di.give_model_50001(total_length, max_sentence_length))
 
 start = datetime.datetime.now()
 

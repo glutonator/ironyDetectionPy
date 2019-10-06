@@ -3,7 +3,7 @@ import os
 
 import keras
 from keras import Sequential
-from keras.layers import LSTM, Dense, Dropout, Bidirectional
+from keras.layers import LSTM, Dense, Dropout, Bidirectional, CuDNNLSTM
 from sklearn import svm
 from sklearn.metrics import accuracy_score
 
@@ -156,6 +156,20 @@ def give_model_50000(len_of_vector_embeddings, max_sentence_length):
     return model, function_name
 
 
+def give_model_50001(len_of_vector_embeddings, max_sentence_length):
+    model: Sequential = Sequential()
+    model.add(
+        Bidirectional(CuDNNLSTM(20, return_sequences=True), input_shape=(max_sentence_length, len_of_vector_embeddings)))
+    model.add(Dropout(0.2))
+    model.add(Bidirectional(CuDNNLSTM(20, return_sequences=False)))
+    model.add(Dropout(0.2))
+    model.add(Dense(20, activation='sigmoid'))
+    model.add(Dense(1, activation='sigmoid'))
+    function_name = inspect.currentframe().f_code.co_name
+    return model, function_name
+
+
+
 
 ####################################################################################
 
@@ -201,13 +215,14 @@ def train_model_learing_rate(model: Sequential, X_train, X_val, X_test, Y_train,
     save_best = keras.callbacks.ModelCheckpoint(path + file_with_model_weights, monitor='val_acc', verbose=1,
                                                 save_best_only=True)
     early_stop = keras.callbacks.EarlyStopping(monitor='val_acc', min_delta=0, patience=10, verbose=1)
+    # early_stop = keras.callbacks.EarlyStopping(monitor='val_accuracy', min_delta=0, patience=10, verbose=1)
 
 
     cb = [early_stop, save_best]
     # cb = [save_best]
     results = model.fit(X_train, Y_train, validation_data=(X_val, Y_val),
                         callbacks=cb, epochs=100, batch_size=5,
-                        verbose=1)
+                        verbose=0)
                         # verbose=0)
     #todo: change to old value of epochs = 100
     # results = model.fit(X_train, Y_train, validation_data=(X_val, Y_val),
