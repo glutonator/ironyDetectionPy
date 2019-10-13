@@ -94,7 +94,7 @@ def ft_prepare_data_for_network():
 start = datetime.datetime.now()
 
 # preprocess_data()
-# ft_preprocess_data()
+ft_preprocess_data()
 # prepare_data_for_network()
 ft_prepare_data_for_network()
 

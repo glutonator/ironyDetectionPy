@@ -27,6 +27,11 @@ def load_input_data(filename: str) -> pd.DataFrame:
     # data = pd.read_csv('test_dane.txt', sep="\t")
     return data
 
+def load_input_data_reddit(filename: str) -> pd.DataFrame:
+    data = pd.read_csv(filename, sep="\t")
+    # data = pd.read_csv('SemEval2018-T3-train-taskA.txt', sep="\t")
+    # data = pd.read_csv('test_dane.txt', sep="\t")
+    return data
 
 def load_vectors(filename: str) -> pd.DataFrame:
     # data = pd.read_csv('SemEval2018-T3-train-taskA.txt', sep="\t")

@@ -8,7 +8,7 @@ from sklearn.metrics import accuracy_score
 from sklearn.svm import SVC
 
 import detection.irony_models as di
-from detection.data_inputs import give_data
+from detection.data_inputs import give_data, give_data_reddit
 
 # init
 max_sentence_length = 40
@@ -18,8 +18,9 @@ len_of_vector_embeddings = 300
 postags_length = 46
 total_length = len_of_vector_embeddings + postags_length
 
-X_train, X_val, X_test, Y_train, Y_val, Y_test = give_data(total_length, max_sentence_length)
-global_path_to_results = "results2_ft/"
+# X_train, X_val, X_test, Y_train, Y_val, Y_test = give_data(total_length, max_sentence_length)
+X_train, X_val, X_test, Y_train, Y_val, Y_test = give_data_reddit(total_length, max_sentence_length)
+global_path_to_results = "results2_ft_reddit/"
 ts = str(round(time.time()))
 
 models: List[Sequential] = []

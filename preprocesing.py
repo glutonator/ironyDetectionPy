@@ -23,8 +23,11 @@ def func(model):
 def clean_messages(data: DataFrame, model: Word2VecKeyedVectors):
     # remove urls
     data['Tweet_text'] = data['Tweet_text'].str \
-        .replace('(http|ftp|https)://([\\w_-]+(?:(?:\\.[\\w_-]+)+))([\\w.,@?^=%&:/~+#-]*[\\w@?^=%&/~+#-])?', '',
+        .replace('(http|ftp|https)://([\\w_-]+(?:(?:\\.[\\w_\\s-]+)+))([\\w.,@?^=%&:/~+#-]*[\\w@?^=%&/~+#-])?', '',
                  regex=True)
+
+    data['Tweet_text'] = data['Tweet_text'].str.replace('\n', ' ', regex=True)
+
 
     # remove nicks
     data['Tweet_text'] = data['Tweet_text'].str.replace('@[A-Za-z0-9_]+', ' @ username @ ', regex=True)
@@ -45,6 +48,16 @@ def clean_messages(data: DataFrame, model: Word2VecKeyedVectors):
 
     # remove '"'
     data['Tweet_text'] = data['Tweet_text'].str.replace('"', ' ', regex=True)
+
+    # remove “ and ”
+    # data['Tweet_text'] = data['Tweet_text'].str.replace('\u201c', ' ', regex=True)
+    # data['Tweet_text'] = data['Tweet_text'].str.replace('\u201d', ' ', regex=True)
+    #
+    #
+    # data['Tweet_text'] = data['Tweet_text'].str.replace('\u2019', '\'', regex=True)
+    # data['Tweet_text'] = data['Tweet_text'].str.replace('\u2018', '\'', regex=True)
+
+
 
     # remove "|"
     data['Tweet_text'] = data['Tweet_text'].str.replace('|', ' ', regex=False)
@@ -147,6 +160,19 @@ def tokenize_data(data):
     # for i in range(0, data.shape[0]):
     #     print(data['Tweet_text'][i])
     #     data['Tweet_text'][i] = tknzr.tokenize(data['Tweet_text'][i])
+
+
+def tokenize_data_reddit(data):
+    # tknzr = TweetTokenizer()
+    # data['Tweet_text'] = data['Tweet_text'].apply(tknzr.tokenize)
+    tknzr = TweetTokenizer()
+    print(data['Tweet_text'].dtype)
+    # col_as_string = data['Tweet_text'].astype('|S')
+    col_as_string = data['Tweet_text'].astype(str)
+    del data['Tweet_text']
+    data['Tweet_text'] = col_as_string
+    print(data['Tweet_text'].dtype)
+    data['Tweet_text'] = data['Tweet_text'].apply(tknzr.tokenize)
 
 
 def translate_sentence_to_vectors(data: DataFrame, model: Word2VecKeyedVectors,

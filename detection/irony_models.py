@@ -159,11 +159,11 @@ def give_model_50000(len_of_vector_embeddings, max_sentence_length):
 def give_model_50001(len_of_vector_embeddings, max_sentence_length):
     model: Sequential = Sequential()
     model.add(
-        Bidirectional(CuDNNLSTM(20, return_sequences=True), input_shape=(max_sentence_length, len_of_vector_embeddings)))
+        Bidirectional(CuDNNLSTM(100, return_sequences=True), input_shape=(max_sentence_length, len_of_vector_embeddings)))
     model.add(Dropout(0.2))
-    model.add(Bidirectional(CuDNNLSTM(20, return_sequences=False)))
+    model.add(Bidirectional(CuDNNLSTM(100, return_sequences=False)))
     model.add(Dropout(0.2))
-    model.add(Dense(20, activation='sigmoid'))
+    model.add(Dense(100, activation='sigmoid'))
     model.add(Dense(1, activation='sigmoid'))
     function_name = inspect.currentframe().f_code.co_name
     return model, function_name
@@ -221,7 +221,7 @@ def train_model_learing_rate(model: Sequential, X_train, X_val, X_test, Y_train,
     cb = [early_stop, save_best]
     # cb = [save_best]
     results = model.fit(X_train, Y_train, validation_data=(X_val, Y_val),
-                        callbacks=cb, epochs=100, batch_size=5,
+                        callbacks=cb, epochs=100, batch_size=100,
                         verbose=0)
                         # verbose=0)
     #todo: change to old value of epochs = 100
