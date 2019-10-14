@@ -105,31 +105,31 @@ def save_scores_to_file(metrics_names, scores, path, filename):
     file.close()
 
 
-def get_all_models(total_length, max_sentence_length):
-    models: List[Sequential] = []
+# def get_all_models(total_length, max_sentence_length):
+#     models: List[Sequential] = []
+#
+#     # models.append(di_gpu.give_model_10(total_length, max_sentence_length))
+#     # models.append(di_gpu.give_model_20(total_length, max_sentence_length))
+#     # models.append(di_gpu.give_model_30(total_length, max_sentence_length))
+#     # models.append(di_gpu.give_model_40(total_length, max_sentence_length))
+#     # models.append(di_gpu.give_model_50(total_length, max_sentence_length))
+#     # models.append(di_gpu.give_model_60(total_length, max_sentence_length))
+#     #
+#     # models.append(di_gpu.give_model_41(total_length, max_sentence_length))
+#     # models.append(di_gpu.give_model_61(total_length, max_sentence_length))
+#     #
+#     # models.append(di_gpu.give_model_50000(total_length, max_sentence_length))
+#     models.append(di_gpu.give_model_50001(total_length, max_sentence_length))
+#
+#     return models
 
-    # models.append(di_gpu.give_model_10(total_length, max_sentence_length))
-    # models.append(di_gpu.give_model_20(total_length, max_sentence_length))
-    # models.append(di_gpu.give_model_30(total_length, max_sentence_length))
-    # models.append(di_gpu.give_model_40(total_length, max_sentence_length))
-    # models.append(di_gpu.give_model_50(total_length, max_sentence_length))
-    # models.append(di_gpu.give_model_60(total_length, max_sentence_length))
-    #
-    # models.append(di_gpu.give_model_41(total_length, max_sentence_length))
-    # models.append(di_gpu.give_model_61(total_length, max_sentence_length))
-    #
-    # models.append(di_gpu.give_model_50000(total_length, max_sentence_length))
-    models.append(di_gpu.give_model_50001(total_length, max_sentence_length))
 
-    return models
-
-
-def trail_all(global_path_to_results, total_length, max_sentence_length, X_train, X_val, X_test, Y_train, Y_val,
-              Y_test):
+def trail_all(models: List[Sequential], global_path_to_results, total_length, max_sentence_length, X_train, X_val,
+              X_test, Y_train, Y_val, Y_test):
     ts = str(round(time.time()))
     # di_gpu.baseline_00(X_train, X_val, X_test, Y_train, Y_val, Y_test)
 
-    models: List[Sequential] = get_all_models(total_length, max_sentence_length)
+    # models: List[Sequential] = get_all_models(total_length, max_sentence_length)
 
     start = datetime.datetime.now()
 

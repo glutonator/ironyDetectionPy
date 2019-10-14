@@ -154,10 +154,10 @@ def give_model_50000(len_of_vector_embeddings, max_sentence_length):
 def give_model_50001(len_of_vector_embeddings, max_sentence_length):
     model: Sequential = Sequential()
     model.add(
-        Bidirectional(CuDNNLSTM(100, return_sequences=True),
+        Bidirectional(LSTM(100, return_sequences=True),
                       input_shape=(max_sentence_length, len_of_vector_embeddings)))
     model.add(Dropout(0.2))
-    model.add(Bidirectional(CuDNNLSTM(100, return_sequences=False)))
+    model.add(Bidirectional(LSTM(100, return_sequences=False)))
     model.add(Dropout(0.2))
     model.add(Dense(100, activation='sigmoid'))
     model.add(Dense(1, activation='sigmoid'))
