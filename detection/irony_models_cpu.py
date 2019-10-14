@@ -1,7 +1,7 @@
 import inspect
 
 from keras import Sequential
-from keras.layers import LSTM, Dense, Dropout, Bidirectional, CuDNNLSTM
+from keras.layers import LSTM, Dense, Dropout, Bidirectional
 from sklearn import svm
 from sklearn.metrics import accuracy_score
 

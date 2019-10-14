@@ -1,17 +1,16 @@
 # wczytywanie modelu z plliku:
 from pandas import DataFrame
 import pandas as pd
-from typing import List, Any, Union
 
 from sklearn.preprocessing import LabelEncoder, OneHotEncoder
 
-from load_files import load_glove_model, load_input_data, save_output_data
-from preprocesing import clean_messages, tokenize_data, translate_sentence_to_vectors
+from preproccesing.load_files import load_glove_and_fastText_model, load_input_data
+from preproccesing.preprocesing import tokenize_data, translate_sentence_to_vectors
 
 pd.set_option('display.max_columns', None)
 pd.set_option('display.max_rows', None)
 
-model = load_glove_model('word2vec.txt')
+model = load_glove_and_fastText_model('word2vec.txt')
 # data: DataFrame = load_input_data('tmp_file_in.txt')
 # #
 # clean_messages(data, model)

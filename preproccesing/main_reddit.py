@@ -1,16 +1,9 @@
-import numpy as nplen_of_vector_embeddings
-import pandas as pd
-from gensim.models import word2vec
-from gensim.models import KeyedVectors
-import nltk
 # from nltk.tokenize import sent_tokenize, word_tokenize
-from nltk.tokenize import TweetTokenizer
-import string
 
 from pandas import DataFrame
 
-from load_files import load_glove_model, load_input_data, save_output_data, load_FastText_model, load_input_data_reddit
-from preprocesing import clean_messages, tokenize_data, translate_sentence_to_vectors, create_encoders, \
+from preproccesing.load_files import load_input_data, save_output_data, load_FastText_model, load_input_data_reddit
+from preproccesing.preprocesing import clean_messages, translate_sentence_to_vectors, create_encoders, \
     tokenize_data_reddit
 import datetime
 

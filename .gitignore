@@ -4,3 +4,4 @@ glove.twitter.27B.25d.txt
 glove.twitter.27B.50d.txt
 word2vec.txt
 word2vec_50.txt
+wiki-news-300d-1M.vec

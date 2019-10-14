@@ -14,6 +14,10 @@ from sklearn.preprocessing import LabelEncoder, OneHotEncoder
 
 import numpy as np
 
+embeddingsPath = 'embeddings/'
+# from preproccesing.main_glove import embeddingsPath
+
+
 def func(model):
     # calculate: (king - man) + woman = ?
     result = model.most_similar(positive=['woman', 'king'], negative=['man'], topn=1)
@@ -222,7 +226,7 @@ def print_all(data):
 
 def create_encoders():
     list_of_pos_tags = []
-    with open('pos_tags.txt', 'r') as f:
+    with open(embeddingsPath+'pos_tags.txt', 'r') as f:
         for line in f:
             line = line.rstrip()
             print(line)

@@ -5,7 +5,7 @@ from gensim.models.wrappers import FastText
 
 
 
-def load_glove_model(filename:str) -> Word2VecKeyedVectors:
+def load_glove_and_fastText_model(filename:str) -> Word2VecKeyedVectors:
     # load the Stanford GloVe model
     # filename = 'word2vec.txt'
     model = KeyedVectors.load_word2vec_format(filename, binary=False)
