@@ -9,6 +9,7 @@ from sklearn.model_selection import train_test_split
 from load_files import load_vectors
 from collections import Counter
 
+
 def give_data(len_of_vector_embeddings, max_sentence_length):
     # data: DataFrame = load_vectors('vector_test_full_good_01_06_2019.txt')
     # data: DataFrame = load_vectors('vector_test_glove_full_25.txt')
@@ -40,7 +41,7 @@ def give_data(len_of_vector_embeddings, max_sentence_length):
         # print(str(sentence_index) + " " + str(max_len))
         # if(len(sentence)>20):
         #     print(str(sentence_index) + " " + str(len(sentence)))
-        count_of_list_of_sentences.append(""+str(len(sentence)))
+        count_of_list_of_sentences.append("" + str(len(sentence)))
 
         if len(sentence) < max_sentence_length:
             while len(sentence) < max_sentence_length:
@@ -100,7 +101,7 @@ def give_data_reddit(len_of_vector_embeddings, max_sentence_length):
         # print(str(sentence_index) + " " + str(max_len))
         # if(len(sentence)>20):
         #     print(str(sentence_index) + " " + str(len(sentence)))
-        count_of_list_of_sentences.append(""+str(len(sentence)))
+        count_of_list_of_sentences.append("" + str(len(sentence)))
 
         if len(sentence) < max_sentence_length:
             while len(sentence) < max_sentence_length:
@@ -127,7 +128,6 @@ def give_data_reddit(len_of_vector_embeddings, max_sentence_length):
     X_train, X_val, Y_train, Y_val = train_test_split(X_train_2, Y_train_2, test_size=0.2, random_state=42)
     print("data split for training and testing")
     return X_train, X_val, X_test, Y_train, Y_val, Y_test
-
 
 
 def get_data_from_dataset_one(len_of_vector_embeddings, max_sentence_length):
@@ -161,7 +161,7 @@ def get_data_from_dataset_one(len_of_vector_embeddings, max_sentence_length):
         # print(str(sentence_index) + " " + str(max_len))
         # if(len(sentence)>20):
         #     print(str(sentence_index) + " " + str(len(sentence)))
-        count_of_list_of_sentences.append(""+str(len(sentence)))
+        count_of_list_of_sentences.append("" + str(len(sentence)))
 
         if len(sentence) < max_sentence_length:
             while len(sentence) < max_sentence_length:
@@ -183,14 +183,7 @@ def get_data_from_dataset_one(len_of_vector_embeddings, max_sentence_length):
     dataY_numpy = numpy.array(dataY['Label'].values)
     print(dataY_numpy.shape)
 
-    return dataX_numpy,dataY_numpy
-
-
-    # split training and testing data
-    # X_train_2, X_test, Y_train_2, Y_test = train_test_split(dataX_numpy, dataY_numpy, test_size=0.2, random_state=42)
-    # X_train, X_val, Y_train, Y_val = train_test_split(X_train_2, Y_train_2, test_size=0.2, random_state=42)
-    # print("data split for training and testing")
-    # return X_train, X_val, X_test, Y_train, Y_val, Y_test
+    return dataX_numpy, dataY_numpy
 
 
 def get_data_from_dataset_reddit(len_of_vector_embeddings, max_sentence_length):
@@ -224,7 +217,7 @@ def get_data_from_dataset_reddit(len_of_vector_embeddings, max_sentence_length):
         # print(str(sentence_index) + " " + str(max_len))
         # if(len(sentence)>20):
         #     print(str(sentence_index) + " " + str(len(sentence)))
-        count_of_list_of_sentences.append(""+str(len(sentence)))
+        count_of_list_of_sentences.append("" + str(len(sentence)))
 
         if len(sentence) < max_sentence_length:
             while len(sentence) < max_sentence_length:
@@ -246,17 +239,11 @@ def get_data_from_dataset_reddit(len_of_vector_embeddings, max_sentence_length):
     dataY_numpy = numpy.array(dataY['Label'].values)
     print(dataY_numpy.shape)
 
-    return dataX_numpy,dataY_numpy
-
-    # split training and testing data
-    # X_train_2, X_test, Y_train_2, Y_test = train_test_split(dataX_numpy, dataY_numpy, test_size=0.2, random_state=42)
-    # X_train, X_val, Y_train, Y_val = train_test_split(X_train_2, Y_train_2, test_size=0.2, random_state=42)
-    # print("data split for training and testing")
-    # return X_train, X_val, X_test, Y_train, Y_val, Y_test
+    return dataX_numpy, dataY_numpy
 
 
 def get_data_for_network(total_length, max_sentence_length, sets):
-    if (sets == 'both'):
+    if sets == 'both':
         XXXX_one, YYYY_one = get_data_from_dataset_one(total_length, max_sentence_length)
         XXXX_reddit, YYYY_reddit = get_data_from_dataset_reddit(total_length, max_sentence_length)
 
@@ -264,18 +251,18 @@ def get_data_for_network(total_length, max_sentence_length, sets):
         YYYY = np.append(YYYY_one, YYYY_reddit, axis=0)
         return XXXX, YYYY
 
-    elif (sets == 'one'):
+    elif sets == 'one':
         XXXX_one, YYYY_one = get_data_from_dataset_one(total_length, max_sentence_length)
         return XXXX_one, YYYY_one
 
-    elif(sets == 'red'):
+    elif sets == 'red':
         XXXX_reddit, YYYY_reddit = get_data_from_dataset_reddit(total_length, max_sentence_length)
         return XXXX_reddit, YYYY_reddit
 
 
-
-def split_data_sets(dataX_numpy,dataY_numpy):
+def split_data_sets(dataX_numpy, dataY_numpy):
     # split training and testing data
+    # todo zmianić test_size=0.9 na 0.2
     X_train_2, X_test, Y_train_2, Y_test = train_test_split(dataX_numpy, dataY_numpy, test_size=0.9, random_state=42)
     # X_train_2, X_test, Y_train_2, Y_test = train_test_split(dataX_numpy, dataY_numpy, test_size=0.2, random_state=42)
     X_train, X_val, Y_train, Y_val = train_test_split(X_train_2, Y_train_2, test_size=0.2, random_state=42)

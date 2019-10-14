@@ -7,35 +7,7 @@ from keras import Sequential
 from typing import List
 import detection.irony_models_gpu as di_gpu
 
-# from detection.irony_models import create_dir, train_model_learing_rate, eval_model, eval_model_validation
 from detection.my_plots import generate_plots
-
-
-####################################################################################
-
-
-def train_model(model: Sequential, X_train, X_val, X_test, Y_train, Y_val, Y_test, path):
-    gen_report(model, path, "report.txt")
-    file_with_model_weights = "weights.best.hdf5"
-
-    model.summary()
-    model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
-
-    save_best = keras.callbacks.ModelCheckpoint(path + file_with_model_weights, monitor='val_loss', verbose=0,
-                                                save_best_only=True)
-    early_stop = keras.callbacks.EarlyStopping(monitor='val_loss', min_delta=0, patience=10, verbose=0)
-
-    # results = model.fit(X_train, Y_train, validation_split=0.2,
-    #                     callbacks=[early_stop, save_best], epochs=40, batch_size=10,
-    #                     verbose=0)
-    results = model.fit(X_train, Y_train, validation_data=(X_val, Y_val),
-                        callbacks=[early_stop, save_best], epochs=40, batch_size=10,
-                        verbose=0)
-    generate_plots(results, path)
-    scores = model.evaluate(X_test, Y_test, verbose=1)
-    save_scores_to_file(model.metrics_names, scores, path, "test_last_scores.txt")
-    # print(model.metrics_names)
-    # print(scores)
 
 
 def train_model_learing_rate(model: Sequential, X_train, X_val, X_test, Y_train, Y_val, Y_test, path, lr):
