@@ -59,8 +59,10 @@ class EnvGlove:
 
 
 # env = EnvFastText(data_set=DataSetOne())
-env = EnvGlove(data_set=DataSetOne())
-# env = EnvFastText(data_set=DataSetReddit())
+env = EnvFastText(data_set=DataSetReddit())
+
+# env = EnvGlove(data_set=DataSetOne())
+# env = EnvGlove(data_set=DataSetReddit())
 
 dataset_name = env.dataset_name
 embedding = env.embedding
@@ -84,13 +86,21 @@ def print_all():
     print("###############################")
 
 
+def unify_labels(data: DataFrame):
+    # data: DataFrame = load_input_data('ft_preprocessed_data_new3_merged_reddit.txt')
+    data['Label'] = data['Label'].replace(-1, 0)
+
+
 def preprocess_data():
     # wczytywanie modelu z plliku:
     model = load_glove_and_fastText_model(embeddingsPath + model_file)
     data: DataFrame = load_input_data(input_filesPath + input_file)
     #
-    # todo: uncomment
-    # clean_messages(data, model)
+    clean_messages(data, model)
+
+    # replace -1 to 0 in reddit dataset
+    if dataset_name == 'reddit':
+        unify_labels(data)
     # save to file
     save_output_data(data, preprocessed_dataPath + preprocessed_file)
 
@@ -124,7 +134,7 @@ start = datetime.datetime.now()
 
 # debug('model_file')
 print_all()
-# preprocess_data()
+preprocess_data()
 # prepare_data_for_network()
 
 stop = datetime.datetime.now()
