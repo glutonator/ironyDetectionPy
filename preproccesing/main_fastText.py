@@ -14,43 +14,55 @@ preprocessed_dataPath = 'preprocessed_data/'
 vector_dataPath = 'vector_data/'
 
 
-class DataSetOne:
-    datasetName = 'one'
-    input_file = 'SemEval2018-T3-train-taskA_merged_with_gold_test_taskA.txt'
+class ParentDataSet:
+    def __init__(self, _dataset_name, _input_file):
+        self.dataset_name = _dataset_name
+        self.input_file = _input_file
 
 
-class DataSetReddit:
-    datasetName = 'reddit'
-    input_file = 'irony-labeled_clean02.csv'
+class DataSetOne(ParentDataSet):
+    _datasetName = 'one'
+    _input_file = 'SemEval2018-T3-train-taskA_merged_with_gold_test_taskA.txt'
+
+    def __init__(self):
+        super().__init__(self._datasetName, self._input_file)
+
+
+class DataSetReddit(ParentDataSet):
+    _datasetName = 'reddit'
+    _input_file = 'irony-labeled_clean02.csv'
+
+    def __init__(self):
+        super().__init__(self._datasetName, self._input_file)
 
 
 class EnvFastText:
     model_file = 'wiki-news-300d-1M.vec'
 
-    def __init__(self, data_set: DataSetOne):
+    def __init__(self, data_set: ParentDataSet):
         self.embedding = 'fastText'
-        self.datasetName = data_set.datasetName
+        self.dataset_name = data_set.dataset_name
         self.input_file = data_set.input_file
-        self.preprocessed_file = 'preprocessed_data_' + self.embedding + '_dataset_' + self.datasetName + '.txt'
-        self.vector_file = 'vector_data_' + self.embedding + '_dataset_' + self.datasetName + '.txt'
+        self.preprocessed_file = 'preprocessed_data_' + self.embedding + '_dataset_' + self.dataset_name + '.txt'
+        self.vector_file = 'vector_data_' + self.embedding + '_dataset_' + self.dataset_name + '.txt'
 
 
 class EnvGlove:
     model_file = 'word2vec.txt'
 
-    def __init__(self, data_set: DataSetOne):
+    def __init__(self, data_set: ParentDataSet):
         self.embedding = 'glove'
-        self.datasetName = data_set.datasetName
+        self.dataset_name = data_set.dataset_name
         self.input_file = data_set.input_file
-        self.preprocessed_file = 'preprocessed_data_' + self.embedding + '_dataset_' + self.datasetName + '.txt'
-        self.vector_file = 'vector_data_' + self.embedding + '_dataset_' + self.datasetName + '.txt'
+        self.preprocessed_file = 'preprocessed_data_' + self.embedding + '_dataset_' + self.dataset_name + '.txt'
+        self.vector_file = 'vector_data_' + self.embedding + '_dataset_' + self.dataset_name + '.txt'
 
 
 # env = EnvFastText(data_set=DataSetOne())
 env = EnvGlove(data_set=DataSetOne())
 # env = EnvFastText(data_set=DataSetReddit())
 
-datasetName = env.datasetName
+dataset_name = env.dataset_name
 embedding = env.embedding
 model_file = env.model_file
 input_file = env.input_file
@@ -64,7 +76,7 @@ def debug(expression):
 
 def print_all():
     print("###############################")
-    debug('datasetName')
+    debug('dataset_name')
     debug('embedding')
     debug('input_file')
     debug('model_file')
