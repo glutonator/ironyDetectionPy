@@ -59,8 +59,8 @@ class EnvGlove:
         self.vector_file = 'vector_data_' + self.embedding + '_dataset_' + self.dataset_name + '.txt'
 
 
-# env = EnvFastText(data_set=DataSetOne())
-env = EnvFastText(data_set=DataSetReddit())
+env = EnvFastText(data_set=DataSetOne())
+# env = EnvFastText(data_set=DataSetReddit())
 
 # env = EnvGlove(data_set=DataSetOne())
 # env = EnvGlove(data_set=DataSetReddit())
@@ -70,6 +70,7 @@ embedding = env.embedding
 model_file = env.model_file
 input_file = env.input_file
 preprocessed_file = env.preprocessed_file
+vector_file = env.vector_file
 
 
 def debug(expression):
@@ -84,6 +85,7 @@ def print_all():
     debug('input_file')
     debug('model_file')
     debug('preprocessed_file')
+    debug('vector_file')
     print("###############################")
 
 
@@ -123,7 +125,7 @@ def prepare_data_for_network():
 
     list_of_not_found_words = \
         translate_sentence_to_vectors(data, model,
-                                      output_filename=vector_dataPath + 'vector_data_fastText_dataset_one.txt',
+                                      output_filename=vector_dataPath + vector_file,
                                       label_encoder=label_encoder, onehot_encoder=onehot_encoder)
 
     print("translate_sentence_to_vectors finished")
