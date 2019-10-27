@@ -22,5 +22,5 @@ X_train, X_val, X_test, Y_train, Y_val, Y_test = split_data_sets(XXXX, YYYY)
 
 models: List[Sequential] = get_all_models_cpu(total_length, max_sentence_length)
 
-trail_all(models, global_path_to_results, total_length, max_sentence_length, X_train, X_val, X_test, Y_train, Y_val,
+trail_all(models, global_path_to_results, X_train, X_val, X_test, Y_train, Y_val,
           Y_test)

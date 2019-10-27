@@ -31,7 +31,7 @@ class DataSetOne(ParentDataSet):
 
 class DataSetReddit(ParentDataSet):
     _datasetName = 'reddit'
-    _input_file = 'irony-labeled_clean02.csv'
+    _input_file = 'irony-labeled_clean03.csv'
 
     def __init__(self):
         super().__init__(self._datasetName, self._input_file)
@@ -59,8 +59,8 @@ class EnvGlove:
         self.vector_file = 'vector_data_' + self.embedding + '_dataset_' + self.dataset_name + '.txt'
 
 
-env = EnvFastText(data_set=DataSetOne())
-# env = EnvFastText(data_set=DataSetReddit())
+# env = EnvFastText(data_set=DataSetOne())
+env = EnvFastText(data_set=DataSetReddit())
 
 # env = EnvGlove(data_set=DataSetOne())
 # env = EnvGlove(data_set=DataSetReddit())
@@ -141,7 +141,7 @@ start = datetime.datetime.now()
 # debug('model_file')
 print_all()
 # preprocess_data()
-prepare_data_for_network()
+# prepare_data_for_network()
 
 stop = datetime.datetime.now()
 delta = stop - start

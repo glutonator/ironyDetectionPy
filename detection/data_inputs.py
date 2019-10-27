@@ -16,6 +16,7 @@ vector_dataPath = main_dir + 'vector_data/'
 def get_data_from_dataset_one(len_of_vector_embeddings, max_sentence_length):
     # todo: split glove and fasttext
     data: DataFrame = load_vectors(vector_dataPath + 'vector_data_fastText_dataset_one.txt')
+    get_balance_info(data, "one")
 
     # # vector
     dataX = data.drop(columns=['Tweet_index', 'Label'])
@@ -66,6 +67,7 @@ def get_data_from_dataset_one(len_of_vector_embeddings, max_sentence_length):
 def get_data_from_dataset_reddit(len_of_vector_embeddings, max_sentence_length):
     # todo: split glove and fasttext
     data: DataFrame = load_vectors(vector_dataPath + 'vector_data_fastText_dataset_reddit.txt')
+    get_balance_info(data, "reddit")
 
     # # vector
     dataX = data.drop(columns=['Label'])
@@ -129,6 +131,11 @@ def get_data_for_network(total_length, max_sentence_length, sets):
     elif sets == 'red':
         XXXX_reddit, YYYY_reddit = get_data_from_dataset_reddit(total_length, max_sentence_length)
         return XXXX_reddit, YYYY_reddit
+
+
+def get_balance_info(data, dataset_name):
+    dataset_count = data['Label'].value_counts()
+    print(dataset_name + ": \n" + str(dataset_count))
 
 
 def split_data_sets(dataX_numpy, dataY_numpy):
