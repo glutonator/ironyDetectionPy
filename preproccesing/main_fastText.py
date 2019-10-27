@@ -1,9 +1,12 @@
+from __future__ import print_function
+
 from pandas import DataFrame
 
 from preproccesing.load_files import load_glove_and_fastText_model, load_input_data, save_output_data
 
 from preproccesing.preprocesing import clean_messages, tokenize_data, translate_sentence_to_vectors, create_encoders
 import datetime
+import sys
 
 embeddingsPath = 'embeddings/'
 input_filesPath = 'input_files/'
@@ -43,12 +46,30 @@ class EnvGlove:
         self.vector_file = 'vector_data_' + self.embedding + '_dataset_' + self.datasetName + '.txt'
 
 
-env = EnvFastText(data_set=DataSetOne())
+# env = EnvFastText(data_set=DataSetOne())
+env = EnvGlove(data_set=DataSetOne())
 # env = EnvFastText(data_set=DataSetReddit())
 
+datasetName = env.datasetName
+embedding = env.embedding
 model_file = env.model_file
 input_file = env.input_file
 preprocessed_file = env.preprocessed_file
+
+
+def debug(expression):
+    frame = sys._getframe(1)
+    print(expression, '=', repr(eval(expression, frame.f_globals, frame.f_locals)))
+
+
+def print_all():
+    print("###############################")
+    debug('datasetName')
+    debug('embedding')
+    debug('input_file')
+    debug('model_file')
+    debug('preprocessed_file')
+    print("###############################")
 
 
 def preprocess_data():
@@ -56,7 +77,8 @@ def preprocess_data():
     model = load_glove_and_fastText_model(embeddingsPath + model_file)
     data: DataFrame = load_input_data(input_filesPath + input_file)
     #
-    clean_messages(data, model)
+    # todo: uncomment
+    # clean_messages(data, model)
     # save to file
     save_output_data(data, preprocessed_dataPath + preprocessed_file)
 
@@ -86,7 +108,11 @@ def prepare_data_for_network():
 
 start = datetime.datetime.now()
 
-preprocess_data()
+# debug(input_file)
+
+# debug('model_file')
+print_all()
+# preprocess_data()
 # prepare_data_for_network()
 
 stop = datetime.datetime.now()
