@@ -4,7 +4,8 @@ from pandas import DataFrame
 
 from preproccesing.load_files import load_glove_and_fastText_model, load_input_data, save_output_data
 
-from preproccesing.preprocesing import clean_messages, tokenize_data, translate_sentence_to_vectors, create_encoders
+from preproccesing.preprocesing import clean_messages, tokenize_data, translate_sentence_to_vectors, create_encoders, \
+    tokenize_data_reddit
 import datetime
 import sys
 
@@ -112,7 +113,10 @@ def prepare_data_for_network():
     print("model loaded")
     data: DataFrame = load_input_data(preprocessed_dataPath + preprocessed_file)
     print("data loaded")
-    tokenize_data(data)
+    if dataset_name == 'reddit':
+        tokenize_data_reddit(data)
+    else:
+        tokenize_data(data)
     print("tokenize_data finished")
 
     label_encoder, onehot_encoder = create_encoders()
@@ -134,8 +138,8 @@ start = datetime.datetime.now()
 
 # debug('model_file')
 print_all()
-preprocess_data()
-# prepare_data_for_network()
+# preprocess_data()
+prepare_data_for_network()
 
 stop = datetime.datetime.now()
 delta = stop - start
