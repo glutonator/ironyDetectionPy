@@ -40,7 +40,7 @@ def train_model_learing_rate(model: Sequential, X_train, X_val, X_test, Y_train,
     # cb = [save_best]
     results = model.fit(X_train, Y_train, validation_data=(X_val, Y_val),
                         # callbacks=cb, epochs=100, batch_size=20,
-                        callbacks=cb, epochs=100, batch_size=200,
+                        callbacks=cb, epochs=100, batch_size=5,
                         verbose=0)
     # verbose=0)
     # todo: change to old value of epochs = 100
@@ -124,7 +124,7 @@ def eval_f1(model, X_test, Y_test, path):
 
     # params_to_save = [accuracy, precision, recall, f1]
 
-    other_metrics_to_file(params_to_save, path, "test_last_scores_other_metrics.txt")
+    other_metrics_to_file(params_to_save, path, "test_best_scores_other_metrics.txt")
 
 
 def create_dir(dir_path):
