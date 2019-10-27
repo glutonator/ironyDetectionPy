@@ -9,16 +9,13 @@ from sklearn.model_selection import train_test_split
 from preproccesing.load_files import load_vectors
 from collections import Counter
 
+main_dir = 'detection/'
+vector_dataPath = main_dir + 'vector_data/'
+
 
 def get_data_from_dataset_one(len_of_vector_embeddings, max_sentence_length):
-    # data: DataFrame = load_vectors('vector_test_full_good_01_06_2019.txt')
-    # data: DataFrame = load_vectors('vector_test_glove_full_25.txt')
-    # data: DataFrame = load_vectors('vector_test_glove_full_50.txt')
-    # data: DataFrame = load_vectors('vector_test_new_glove_50.txt')
-    # data: DataFrame = load_vectors('vector_test_new_glove_200.txt')
-    # data: DataFrame = load_vectors('vector_test_new_glove_merged_200.txt')
-    data: DataFrame = load_vectors('vector_test_fast_text_merged.txt')
-    # data: DataFrame = load_vectors('vector_test_fast_text_merged_reddit.txt')
+    # todo: split glove and fasttext
+    data: DataFrame = load_vectors(vector_dataPath + 'vector_data_fastText_dataset_one.txt')
 
     # # vector
     dataX = data.drop(columns=['Tweet_index', 'Label'])
@@ -67,14 +64,8 @@ def get_data_from_dataset_one(len_of_vector_embeddings, max_sentence_length):
 
 
 def get_data_from_dataset_reddit(len_of_vector_embeddings, max_sentence_length):
-    # data: DataFrame = load_vectors('vector_test_full_good_01_06_2019.txt')
-    # data: DataFrame = load_vectors('vector_test_glove_full_25.txt')
-    # data: DataFrame = load_vectors('vector_test_glove_full_50.txt')
-    # data: DataFrame = load_vectors('vector_test_new_glove_50.txt')
-    # data: DataFrame = load_vectors('vector_test_new_glove_200.txt')
-    # data: DataFrame = load_vectors('vector_test_new_glove_merged_200.txt')
-    # data: DataFrame = load_vectors('vector_test_fast_text_merged.txt')
-    data: DataFrame = load_vectors('vector_test_fast_text_merged_reddit.txt')
+    # todo: split glove and fasttext
+    data: DataFrame = load_vectors(vector_dataPath + 'vector_data_fastText_dataset_reddit.txt')
 
     # # vector
     dataX = data.drop(columns=['Label'])

@@ -49,7 +49,7 @@ class EnvFastText:
 
 
 class EnvGlove:
-    model_file = 'word2vec.txt'
+    model_file = 'word2vec_200.txt'
 
     def __init__(self, data_set: ParentDataSet):
         self.embedding = 'glove'
