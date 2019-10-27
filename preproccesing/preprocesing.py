@@ -7,7 +7,6 @@ import wordninja
 from gensim.models.keyedvectors import Word2VecKeyedVectors
 from nltk import TweetTokenizer
 from pandas import DataFrame
-from pandas.core.arrays import ExtensionArray
 
 from pycontractions import Contractions
 from sklearn.preprocessing import LabelEncoder, OneHotEncoder
@@ -15,13 +14,6 @@ from sklearn.preprocessing import LabelEncoder, OneHotEncoder
 import numpy as np
 
 embeddingsPath = 'embeddings/'
-# from preproccesing.main_glove import embeddingsPath
-
-
-def func(model):
-    # calculate: (king - man) + woman = ?
-    result = model.most_similar(positive=['woman', 'king'], negative=['man'], topn=1)
-    print(result)
 
 
 def clean_messages(data: DataFrame, model: Word2VecKeyedVectors):
@@ -118,44 +110,6 @@ def parseHashtags(data: DataFrame, ):
 
             data['Tweet_text'][i] = " ".join(new_sent)
     print("hashtags Relaced")
-
-
-def tokenize_data_test(model):
-    cont = Contractions(kv_model=model)
-    # cont = Contractions(api_key="glove-twitter-25")
-    # tmp = list(cont.expand_texts(["I would like to know how I had done that!",
-    # tmp = next(cont.expand_texts(["I would like to know how I had done that!",
-    # tmp = next(cont.expand_texts("I would like to know how I had done that!"))
-    # tmp = list(cont.expand_texts(["I'd like to know how I'd done that!"]))
-    # tmp = list(cont.expand_texts(["He's rumored to have talked to Erv's agent... and the Angels asked about Ed Escobar... that's hardly nothing    ;)"]))
-    # tmp = list(cont.expand_texts(["Gregor's rumored to have talked to Erv's agent... and the Angels asked about Ed Escobar... that's hardly nothing    ;)"]))
-    # tmp = list(cont.expand_texts(["Gregor's bored."]))
-    # print(tmp)
-
-    # tknzr = TweetTokenizer()
-    tknzr222 = TweetTokenizer(strip_handles=True)
-    # tknzr333 = TweetTokenizer(strip_handles=True, reduce_len=True)
-    # testData = "Sweet United Nations video. Just in time for Christmas. #imagine #NoReligion  http://t.co/fej2v3OUBR"
-    # testData = "@mrdahl87 We are rumored to have talked to car's agent... and the Angels asked about Ed Escobar... that's hardly nothing    ;)"
-    # testData = "@mrdahl87 We are rumored to have talked to his agent... and the Angels asked about Ed Escobar... that's hardly nothing    ;)"
-    # testData = "@mrdahl87 We are rumored to have talked to Erv's agent... and the Angels asked about Ed Escobar... that's hardly nothing    ;)"
-    # testData = "@mrdahl87 He's rumored to have talked to Erv's agent... and the Angels asked about Ed Escobar... that's hardly nothing    ;)"
-    # TODO jak sobie poradzić ze słowami nazwa_wlasna + "'s" ??? Odp. Ucinianie "'s"? Bo inaczej to ciezko:D
-
-    testData = "He's bored."
-
-    # print(tknzr.tokenize(testData))
-    print(tknzr222.tokenize(testData))
-    # print(tknzr333.tokenize(testData))
-    temp = tknzr222.tokenize(testData)
-
-    ps = nltk.stem.PorterStemmer()
-    for word in temp:
-        print(ps.stem(word))
-
-    lemma = nltk.wordnet.WordNetLemmatizer()
-    for word in temp:
-        print(lemma.lemmatize(word))
 
 
 def tokenize_data(data):
