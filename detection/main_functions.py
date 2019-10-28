@@ -25,16 +25,15 @@ def train_model_learing_rate(model: Sequential, X_train, X_val, X_test, Y_train,
     model.compile(loss='binary_crossentropy', optimizer=adam, metrics=['accuracy'])
 
     # min loss
-    # save_best = keras.callbacks.ModelCheckpoint(path + file_with_model_weights, monitor='val_loss', verbose=1,
-    #                                             save_best_only=True)
-    # early_stop = keras.callbacks.EarlyStopping(monitor='val_loss', min_delta=0, patience=10, verbose=1)
-    #
+    save_best = keras.callbacks.ModelCheckpoint(path + file_with_model_weights, monitor='val_loss', verbose=1,
+                                                save_best_only=True)
+    early_stop = keras.callbacks.EarlyStopping(monitor='val_loss', min_delta=0, patience=10, verbose=1)
+
 
     # max acc
-    save_best = keras.callbacks.ModelCheckpoint(path + file_with_model_weights, monitor='val_acc', verbose=1,
-                                                save_best_only=True)
-    early_stop = keras.callbacks.EarlyStopping(monitor='val_acc', min_delta=0, patience=10, verbose=1)
-    # early_stop = keras.callbacks.EarlyStopping(monitor='val_accuracy', min_delta=0, patience=10, verbose=1)
+    # save_best = keras.callbacks.ModelCheckpoint(path + file_with_model_weights, monitor='val_acc', verbose=1,
+    #                                             save_best_only=True)
+    # early_stop = keras.callbacks.EarlyStopping(monitor='val_acc', min_delta=0, patience=10, verbose=1)
 
     cb = [early_stop, save_best]
     # cb = [save_best]

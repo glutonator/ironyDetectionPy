@@ -6,7 +6,7 @@ from typing import List
 from keras import Sequential
 
 # constance variables
-max_sentence_length = 10
+max_sentence_length = 25
 # len_of_vector_embeddings = 50
 # len_of_vector_embeddings = 200
 len_of_vector_embeddings = 300
