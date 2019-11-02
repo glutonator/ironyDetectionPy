@@ -10,7 +10,7 @@ import datetime
 import sys
 
 embeddingsPath = 'embeddings/'
-input_filesPath = 'input_files/'
+input_filesPath = 'input_files/three/'
 preprocessed_dataPath = 'preprocessed_data/'
 vector_dataPath = 'vector_data/'
 
@@ -37,14 +37,39 @@ class DataSetReddit(ParentDataSet):
         super().__init__(self._datasetName, self._input_file)
 
 
+class DataSetThreeSarcasm(ParentDataSet):
+    _datasetName = 'three'
+    _input_file = 'preprocessed____sarcasm.csv.txt'
+
+    def __init__(self):
+        super().__init__(self._datasetName, self._input_file)
+
+
+class DataSetThreeIrony(ParentDataSet):
+    _datasetName = 'three'
+    _input_file = 'preprocessed____irony.csv.txt'
+
+    def __init__(self):
+        super().__init__(self._datasetName, self._input_file)
+
+
+class DataSetThreeRegular(ParentDataSet):
+    _datasetName = 'three'
+    _input_file = 'preprocessed____regular.csv.txt'
+
+    def __init__(self):
+        super().__init__(self._datasetName, self._input_file)
+
+
 class EnvFastText:
     model_file = 'wiki-news-300d-1M.vec'
 
-    def __init__(self, data_set: ParentDataSet):
+    def __init__(self, data_set: ParentDataSet, parameter: str = ""):
         self.embedding = 'fastText'
         self.dataset_name = data_set.dataset_name
         self.input_file = data_set.input_file
-        self.preprocessed_file = 'preprocessed_data_' + self.embedding + '_dataset_' + self.dataset_name + '.txt'
+        self.preprocessed_file_clean = 'preprocessed_data_' + self.embedding + '_dataset_' + self.dataset_name + '.txt'
+        self.preprocessed_file = 'preprocessed_data_' + self.embedding + '_dataset_' + self.dataset_name + parameter + '.txt'
         self.vector_file = 'vector_data_' + self.embedding + '_dataset_' + self.dataset_name + '.txt'
 
 
@@ -60,7 +85,14 @@ class EnvGlove:
 
 
 # env = EnvFastText(data_set=DataSetOne())
-env = EnvFastText(data_set=DataSetReddit())
+# env = EnvFastText(data_set=DataSetReddit())
+
+#todo: zmianiać -> a potem ręcznie połączyć
+env = EnvFastText(data_set=DataSetThreeIrony(), parameter="irony")
+# env = EnvFastText(data_set=DataSetThreeSarcasm(), parameter="sarcasm")
+# env = EnvFastText(data_set=DataSetThreeRegular(), parameter="regular")
+
+# env = EnvGlove(data_set=DataSetThree())
 
 # env = EnvGlove(data_set=DataSetOne())
 # env = EnvGlove(data_set=DataSetReddit())
@@ -70,6 +102,7 @@ embedding = env.embedding
 model_file = env.model_file
 input_file = env.input_file
 preprocessed_file = env.preprocessed_file
+preprocessed_file_clean = env.preprocessed_file_clean
 vector_file = env.vector_file
 
 
@@ -94,16 +127,28 @@ def unify_labels(data: DataFrame):
     data['Label'] = data['Label'].replace(-1, 0)
 
 
+def add_label_based_on_data_file(data: DataFrame, value_to_set):
+    data['Label'] = value_to_set
+
+
 def preprocess_data():
     # wczytywanie modelu z plliku:
     model = load_glove_and_fastText_model(embeddingsPath + model_file)
     data: DataFrame = load_input_data(input_filesPath + input_file)
-    #
+    # todo: uncomment
     clean_messages(data, model)
 
     # replace -1 to 0 in reddit dataset
     if dataset_name == 'reddit':
         unify_labels(data)
+
+    if dataset_name == 'three':
+        #todo: zmianiać w zależności od datasetu
+        # sarkazm i ironia -> Label =1
+        #regular -> label = 0
+        # add_label_based_on_data_file(data, 0)
+        add_label_based_on_data_file(data, 1)
+
     # save to file
     save_output_data(data, preprocessed_dataPath + preprocessed_file)
 
@@ -139,8 +184,12 @@ start = datetime.datetime.now()
 # debug(input_file)
 
 # debug('model_file')
-print_all()
-# preprocess_data()
+# print_all()
+preprocess_data()
+
+# if dataset_name == 'three':
+#     preprocessed_file = preprocessed_file_clean
+
 # prepare_data_for_network()
 
 stop = datetime.datetime.now()
