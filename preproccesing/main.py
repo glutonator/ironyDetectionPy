@@ -88,9 +88,9 @@ class EnvGlove:
 # env = EnvFastText(data_set=DataSetReddit())
 
 #todo: zmianiać -> a potem ręcznie połączyć
-env = EnvFastText(data_set=DataSetThreeIrony(), parameter="irony")
+# env = EnvFastText(data_set=DataSetThreeIrony(), parameter="irony")
 # env = EnvFastText(data_set=DataSetThreeSarcasm(), parameter="sarcasm")
-# env = EnvFastText(data_set=DataSetThreeRegular(), parameter="regular")
+env = EnvFastText(data_set=DataSetThreeRegular(), parameter="regular")
 
 # env = EnvGlove(data_set=DataSetThree())
 
@@ -189,7 +189,7 @@ preprocess_data()
 
 # if dataset_name == 'three':
 #     preprocessed_file = preprocessed_file_clean
-
+#todo: wywalić hashtag irony z danych, bo nie wywaliłem wczesniej
 # prepare_data_for_network()
 
 stop = datetime.datetime.now()
