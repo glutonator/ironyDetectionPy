@@ -27,7 +27,7 @@ def train_model_learing_rate(model: Sequential, X_train, X_val, X_test, Y_train,
     # min loss
     save_best = keras.callbacks.ModelCheckpoint(path + file_with_model_weights, monitor='val_loss', verbose=1,
                                                 save_best_only=True)
-    early_stop = keras.callbacks.EarlyStopping(monitor='val_loss', min_delta=0, patience=10, verbose=1)
+    early_stop = keras.callbacks.EarlyStopping(monitor='val_loss', min_delta=0, patience=3, verbose=1)
 
 
     # max acc
@@ -39,7 +39,7 @@ def train_model_learing_rate(model: Sequential, X_train, X_val, X_test, Y_train,
     # cb = [save_best]
     results = model.fit(X_train, Y_train, validation_data=(X_val, Y_val),
                         # callbacks=cb, epochs=100, batch_size=20,
-                        callbacks=cb, epochs=100, batch_size=5,
+                        callbacks=cb, epochs=100, batch_size=2000,
                         verbose=0)
     # verbose=0)
     # todo: change to old value of epochs = 100
@@ -177,7 +177,8 @@ def trail_all(models: List[Sequential], global_path_to_results, X_train, X_val,
         path = global_path_to_results + ts + "_" + function_name + "/"
         create_dir(path)
         # di.train_model(model, X_train, X_val, X_test, Y_train, Y_val, Y_test, path)
-        train_model_learing_rate(model, X_train, X_val, X_test, Y_train, Y_val, Y_test, path, 0.0001)
+        # train_model_learing_rate(model, X_train, X_val, X_test, Y_train, Y_val, Y_test, path, 0.0001)
+        train_model_learing_rate(model, X_train, X_val, X_test, Y_train, Y_val, Y_test, path, 0.001)
         eval_model(model, X_test, Y_test, path)
         eval_model_validation(model, X_val, Y_val, path)
         eval_f1(model, X_test, Y_test, path)

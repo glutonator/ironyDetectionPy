@@ -64,15 +64,18 @@ def get_data_from_dataset_one(len_of_vector_embeddings, max_sentence_length):
     return dataX_numpy, dataY_numpy
 
 
-def get_data_from_dataset_three(len_of_vector_embeddings, max_sentence_length):
+def get_data_from_dataset_three(data: DataFrame,len_of_vector_embeddings, max_sentence_length):
     # todo: split glove and fasttext
-    data: DataFrame = load_vectors(vector_dataPath + 'vector_data_fastText_dataset_three.txt')
+    # data: DataFrame = load_vectors(vector_dataPath + 'vector_data_fastText_dataset_three.txt')
+    # data: DataFrame = load_vectors(vector_dataPath + 'vector_data_fastText_dataset_one.txt')
     get_balance_info(data, "three")
+    print("XXXXXXXXXXXXXXX")
+    print("data loaded from file")
 
     # # vector
-    dataX = data.drop(columns=['Tweet_index', 'Label'])
+    dataX = data.drop(columns=['Label'])
     # # label
-    dataY = data.drop(columns=['Tweet_index', 'Tweet_text'])
+    dataY = data.drop(columns=['Tweet_text'])
 
     dataX_numpy: Type[numpy.ndarray] = dataX['Tweet_text'].to_numpy(copy=True)
     number_of_sentences = len(dataX_numpy)

@@ -82,6 +82,12 @@ def clean_messages(data: DataFrame, model: Word2VecKeyedVectors):
     # data['Tweet_text'] = data['Tweet_text'].str.replace(rf'[{string.punctuation}]', '')
 
 
+def clean_messages_two(data: DataFrame):
+    data['Tweet_text'] = data['Tweet_text'].str.replace('# irony *', ' ', regex=True)
+    data['Tweet_text'] = data['Tweet_text'].str.replace('# ironic *', ' ', regex=True)
+
+
+
 def parseHashtags(data: DataFrame, ):
     number_of_sentences = data.shape[0]
     for i in range(0, number_of_sentences):
@@ -152,7 +158,7 @@ def translate_sentence_to_vectors(data: DataFrame, model: Word2VecKeyedVectors,
         list_of_tags_in_order_in_sentance_in_onehot_encoded = onehot_encoder.transform(list_of_tags_in_order_in_sentance_in_numeric_labels)
 
         count = 0
-        print(data['Tweet_text'][i])
+        # print(data['Tweet_text'][i])
         for word_token in data['Tweet_text'][i]:
             try:
                 vector_from_word = model.get_vector(word_token)
@@ -170,6 +176,45 @@ def translate_sentence_to_vectors(data: DataFrame, model: Word2VecKeyedVectors,
     return list_of_not_found_words
 
 
+def translate_sentence_to_vectors_without_save(data: DataFrame, model: Word2VecKeyedVectors,
+                                  output_filename: str, label_encoder: LabelEncoder,
+                                  onehot_encoder: OneHotEncoder) -> DataFrame:
+    # silence warnings
+    pd.set_option('mode.chained_assignment', None)
+    list_of_not_found_words: List[str] = []
+    for i in range(0, data.shape[0]):
+        list_of_vectors = []
+
+        # add postags
+        list_of_tokens_in_sentance = data['Tweet_text'][i]
+        list_of_tuples_of_tokens_and_tags = nltk.pos_tag(list_of_tokens_in_sentance)
+        list_of_tags_in_order_in_sentance = [i[1] for i in list_of_tuples_of_tokens_and_tags]
+
+        list_of_tags_in_order_in_sentance_in_numeric_labels = label_encoder.transform(list_of_tags_in_order_in_sentance)
+        list_of_tags_in_order_in_sentance_in_numeric_labels = list_of_tags_in_order_in_sentance_in_numeric_labels.reshape(len(list_of_tags_in_order_in_sentance_in_numeric_labels), 1)
+        list_of_tags_in_order_in_sentance_in_onehot_encoded = onehot_encoder.transform(list_of_tags_in_order_in_sentance_in_numeric_labels)
+
+        count = 0
+        # print(data['Tweet_text'][i])
+        for word_token in data['Tweet_text'][i]:
+            try:
+                vector_from_word = model.get_vector(word_token)
+                # add postags
+                vector_onehot_encoded = list_of_tags_in_order_in_sentance_in_onehot_encoded[count]
+                list_of_vectors.append(np.append(vector_from_word, vector_onehot_encoded))
+            except KeyError:
+                list_of_not_found_words.append(word_token)
+
+            count = count + 1
+
+        data['Tweet_text'][i] = list_of_vectors
+
+    return data
+    # data.to_json(output_filename)
+    # return list_of_not_found_words
+
+
+
 def print_all(data):
     print(list(data.columns.values))
     print(data['Tweet_index'].values)
@@ -178,9 +223,9 @@ def print_all(data):
     print(data.dtypes)
 
 
-def create_encoders():
+def create_encoders(parentDir : str = ''):
     list_of_pos_tags = []
-    with open(embeddingsPath+'pos_tags.txt', 'r') as f:
+    with open(parentDir+embeddingsPath+'pos_tags.txt', 'r') as f:
         for line in f:
             line = line.rstrip()
             print(line)

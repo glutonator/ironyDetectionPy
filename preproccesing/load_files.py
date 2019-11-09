@@ -39,7 +39,8 @@ def load_vectors(filename: str) -> pd.DataFrame:
     # data = pd.read_json('vector_test.txt')
     # data = pd.read_json('vector_test_20.txt')
     data = pd.read_json(filename)
-    data = data.sort_index()
+    print("data readed")
+    # data = data.sort_index()
     return data
 
 

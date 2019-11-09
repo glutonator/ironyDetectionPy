@@ -5,7 +5,7 @@ from pandas import DataFrame
 from preproccesing.load_files import load_glove_and_fastText_model, load_input_data, save_output_data
 
 from preproccesing.preprocesing import clean_messages, tokenize_data, translate_sentence_to_vectors, create_encoders, \
-    tokenize_data_reddit
+    tokenize_data_reddit, clean_messages_two
 import datetime
 import sys
 
@@ -88,9 +88,9 @@ class EnvGlove:
 # env = EnvFastText(data_set=DataSetReddit())
 
 #todo: zmianiać -> a potem ręcznie połączyć
-# env = EnvFastText(data_set=DataSetThreeIrony(), parameter="irony")
+env = EnvFastText(data_set=DataSetThreeIrony(), parameter="irony")
 # env = EnvFastText(data_set=DataSetThreeSarcasm(), parameter="sarcasm")
-env = EnvFastText(data_set=DataSetThreeRegular(), parameter="regular")
+# env = EnvFastText(data_set=DataSetThreeRegular(), parameter="regular")
 
 # env = EnvGlove(data_set=DataSetThree())
 
@@ -102,6 +102,7 @@ embedding = env.embedding
 model_file = env.model_file
 input_file = env.input_file
 preprocessed_file = env.preprocessed_file
+preprocessed_file = 'new_merged.txt'
 preprocessed_file_clean = env.preprocessed_file_clean
 vector_file = env.vector_file
 
@@ -131,26 +132,54 @@ def add_label_based_on_data_file(data: DataFrame, value_to_set):
     data['Label'] = value_to_set
 
 
+# def preprocess_data():
+#     # wczytywanie modelu z plliku:
+#     # model = load_glove_and_fastText_model(embeddingsPath + model_file)
+#     # data: DataFrame = load_input_data(input_filesPath + input_file)
+#     data: DataFrame = load_input_data(preprocessed_dataPath + "tmp/preprocessed_data_fastText_dataset_threeregular.txt")
+#     # todo: uncomment
+#     # clean_messages(data, model)
+#     # clean_messages_two(data)
+#
+#     data['Label'] = data['Label'].replace(1, 0)
+#
+#     # replace -1 to 0 in reddit dataset
+#     # if dataset_name == 'reddit':
+#     #     unify_labels(data)
+#
+#     # if dataset_name == 'three':
+#     #     #todo: zmianiać w zależności od datasetu
+#     #     # sarkazm i ironia -> Label =1
+#     #     #regular -> label = 0
+#     #     # add_label_based_on_data_file(data, 0)
+#     #     add_label_based_on_data_file(data, 1)
+#
+#     # save to file
+#     save_output_data(data, preprocessed_dataPath + "____new___"+"regular.txt")
+
+
 def preprocess_data():
     # wczytywanie modelu z plliku:
-    model = load_glove_and_fastText_model(embeddingsPath + model_file)
-    data: DataFrame = load_input_data(input_filesPath + input_file)
+    # model = load_glove_and_fastText_model(embeddingsPath + model_file)
+    # data: DataFrame = load_input_data(input_filesPath + input_file)
+    data: DataFrame = load_input_data(preprocessed_dataPath + "tmp/preprocessed_data_fastText_dataset_threeirony.txt")
     # todo: uncomment
-    clean_messages(data, model)
+    # clean_messages(data, model)
+    clean_messages_two(data)
 
     # replace -1 to 0 in reddit dataset
     if dataset_name == 'reddit':
         unify_labels(data)
 
-    if dataset_name == 'three':
-        #todo: zmianiać w zależności od datasetu
-        # sarkazm i ironia -> Label =1
-        #regular -> label = 0
-        # add_label_based_on_data_file(data, 0)
-        add_label_based_on_data_file(data, 1)
+    # if dataset_name == 'three':
+    #     #todo: zmianiać w zależności od datasetu
+    #     # sarkazm i ironia -> Label =1
+    #     #regular -> label = 0
+    #     # add_label_based_on_data_file(data, 0)
+    #     add_label_based_on_data_file(data, 1)
 
     # save to file
-    save_output_data(data, preprocessed_dataPath + preprocessed_file)
+    save_output_data(data, preprocessed_dataPath + "____new___"+"irony.txt")
 
 
 def prepare_data_for_network():
@@ -159,6 +188,8 @@ def prepare_data_for_network():
     # model = load_FastText_model(embeddingsPath+'word2vec.txt')
     print("model loaded")
     data: DataFrame = load_input_data(preprocessed_dataPath + preprocessed_file)
+    del data['Tweet_index']
+
     print("data loaded")
     if dataset_name == 'reddit':
         tokenize_data_reddit(data)
@@ -185,12 +216,12 @@ start = datetime.datetime.now()
 
 # debug('model_file')
 # print_all()
-preprocess_data()
+# preprocess_data()
 
 # if dataset_name == 'three':
 #     preprocessed_file = preprocessed_file_clean
 #todo: wywalić hashtag irony z danych, bo nie wywaliłem wczesniej
-# prepare_data_for_network()
+prepare_data_for_network()
 
 stop = datetime.datetime.now()
 delta = stop - start
