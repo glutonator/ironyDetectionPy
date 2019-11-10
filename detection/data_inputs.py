@@ -195,12 +195,25 @@ def get_balance_info(data, dataset_name):
     dataset_count = data['Label'].value_counts()
     print(dataset_name + ": \n" + str(dataset_count))
 
+def get_balance_info_from_array(array, dataset_name):
+    # www = np.array([1, 1, 1, 0, 0])
+    unique, counts = numpy.unique(array, return_counts=True)
+    print(dataset_name + ": \n" + str(dict(zip(unique, counts))))
+    # dataset_count = data['Label'].value_counts()
+    # print(dataset_name + ": \n" + str(dataset_count))
+
 
 def split_data_sets(dataX_numpy, dataY_numpy):
     # split training and testing data
     # todo zmianić test_size=0.9 na 0.2
     X_train_2, X_test, Y_train_2, Y_test = train_test_split(dataX_numpy, dataY_numpy, test_size=0.2, random_state=42)
+
     # X_train_2, X_test, Y_train_2, Y_test = train_test_split(dataX_numpy, dataY_numpy, test_size=0.2, random_state=42)
     X_train, X_val, Y_train, Y_val = train_test_split(X_train_2, Y_train_2, test_size=0.2, random_state=42)
+
+    get_balance_info_from_array(Y_train,"Y_train")
+    get_balance_info_from_array(Y_val,"Y_val")
+    get_balance_info_from_array(Y_test,"Y_test")
+
     print("data split for training and testing")
     return X_train, X_val, X_test, Y_train, Y_val, Y_test

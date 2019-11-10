@@ -13,6 +13,7 @@ from typing import List
 
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 
+import detection.irony_models_gpu as di_gpu
 from detection.my_plots import generate_plots
 
 
@@ -69,6 +70,20 @@ def eval_model(model, X_test, Y_test, path):
     # print(model.metrics_names)
     # print(scores)
 
+def eval_model_on_dataset_one(model, X_test, Y_test, path):
+    # load weights
+    file_with_model_weights = "weights.best.hdf5"
+    model.load_weights(path + file_with_model_weights)
+    # Compile model (required to make predictions)
+    model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
+    print("Created model and loaded weights from file")
+
+    scores = model.evaluate(X_test, Y_test, verbose=1)
+    save_scores_to_file(model.metrics_names, scores, path, "one_test_best_scores_testing.txt")
+    # print(model.metrics_names)
+    # print(scores)
+
+
 
 def eval_model_validation(model, X_test, Y_test, path):
     # load weights
@@ -124,6 +139,48 @@ def eval_f1(model, X_test, Y_test, path):
     # params_to_save = [accuracy, precision, recall, f1]
 
     other_metrics_to_file(params_to_save, path, "test_best_scores_other_metrics.txt")
+
+def eval_f1_on_dataset_one(model, X_test, Y_test, path):
+    # load weights
+    file_with_model_weights = "weights.best.hdf5"
+    model.load_weights(path + file_with_model_weights)
+    # Compile model (required to make predictions)
+    model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
+    print("Created model and loaded weights from file")
+
+    # predict probabilities for test set
+    yhat_probs = model.predict(X_test, verbose=0)
+    # predict crisp classes for test set
+    yhat_classes = model.predict_classes(X_test, verbose=0)
+
+    # reduce to 1d array
+    yhat_probs = yhat_probs[:, 0]
+    yhat_classes = yhat_classes[:, 0]
+
+    # accuracy: (tp + tn) / (p + n)
+    accuracy = accuracy_score(Y_test, yhat_classes)
+    print('Accuracy: %f' % accuracy)
+    # precision tp / (tp + fp)
+    precision = precision_score(Y_test, yhat_classes)
+    print('Precision: %f' % precision)
+    # recall: tp / (tp + fn)
+    recall = recall_score(Y_test, yhat_classes)
+    print('Recall: %f' % recall)
+    # f1: 2 tp / (2 tp + fp + fn)
+    f1 = f1_score(Y_test, yhat_classes)
+    print('F1 score: %f' % f1)
+
+    params_to_save = {
+        'accuracy': accuracy,
+        'precision': precision,
+        'recall': recall,
+        'f1': f1
+    }
+
+    # params_to_save = [accuracy, precision, recall, f1]
+
+    other_metrics_to_file(params_to_save, path, "one_test_best_scores_other_metrics.txt")
+
 
 
 def create_dir(dir_path):

@@ -8,6 +8,7 @@ import detection.irony_models_cpu as di_cpu
 def get_all_models_gpu(total_length, max_sentence_length):
     models: List[Sequential] = []
 
+    models.append(di_gpu.give_model_00(total_length, max_sentence_length))
     models.append(di_gpu.give_model_10(total_length, max_sentence_length))
     models.append(di_gpu.give_model_20(total_length, max_sentence_length))
     models.append(di_gpu.give_model_30(total_length, max_sentence_length))

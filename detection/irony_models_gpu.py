@@ -1,7 +1,7 @@
 import inspect
 
 from keras import Sequential
-from keras.layers import Dense, Dropout, Bidirectional, CuDNNLSTM
+from keras.layers import Dense, Dropout, Bidirectional, CuDNNLSTM, Flatten
 from sklearn import svm
 from sklearn.metrics import accuracy_score
 
@@ -28,17 +28,17 @@ def baseline_00(X_train, X_val, X_test, Y_train, Y_val, Y_test):
     print(accuracy_score(Y_test, y_pred_test))
 
 
-# def give_model_00(len_of_vector_embeddings, max_sentence_length):
-#     model: Sequential = Sequential()
-#     model.add(Dense(20, input_shape=(max_sentence_length, len_of_vector_embeddings)))
-#     # model.add(Dense(20))
-#     # model.add(Dense(20))
-#     # model.add(Dense(40))
-#     model.add(Flatten())
-#     model.add(Dense(1, activation='sigmoid'))
-#
-#     function_name = inspect.currentframe().f_code.co_name
-#     return model, function_name
+def give_model_00(len_of_vector_embeddings, max_sentence_length):
+    model: Sequential = Sequential()
+    model.add(Dense(20, input_shape=(max_sentence_length, len_of_vector_embeddings)))
+    # model.add(Dense(20))
+    # model.add(Dense(20))
+    # model.add(Dense(40))
+    model.add(Flatten())
+    model.add(Dense(1, activation='sigmoid'))
+
+    function_name = inspect.currentframe().f_code.co_name
+    return model, function_name
 
 
 def give_model_10(len_of_vector_embeddings, max_sentence_length):

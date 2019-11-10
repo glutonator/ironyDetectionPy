@@ -92,7 +92,7 @@ env = EnvFastText(data_set=DataSetThreeIrony(), parameter="irony")
 # env = EnvFastText(data_set=DataSetThreeSarcasm(), parameter="sarcasm")
 # env = EnvFastText(data_set=DataSetThreeRegular(), parameter="regular")
 
-# env = EnvGlove(data_set=DataSetThree())
+# env = EnvGlove(data_set=DataSetThree())dict(zip(unique, counts))Y_test
 
 # env = EnvGlove(data_set=DataSetOne())
 # env = EnvGlove(data_set=DataSetReddit())
@@ -102,7 +102,7 @@ embedding = env.embedding
 model_file = env.model_file
 input_file = env.input_file
 preprocessed_file = env.preprocessed_file
-preprocessed_file = 'new_merged.txt'
+preprocessed_file = 'three_regular_figurative.txt'
 # preprocessed_file = 'new_new_merged.txt'
 preprocessed_file_clean = env.preprocessed_file_clean
 vector_file = env.vector_file
