@@ -73,7 +73,7 @@ def get_dict_with_metrics(directory: str, main_name='1573398849_') -> Dict:
         model_name: str = get_model_name(sub_dir_name, main_name)
 
         local_path = global_path + sub_dir_name + "/"
-        file = 'one_test_best_scores_other_metrics.txt'
+        file = 'test_best_scores_other_metrics.txt'
         local_path_to_file = local_path + file
         dict_of_metrics: Dict = create_dict_with_values_from_file(local_path_to_file)
         # tmp = read_from_file(local_path_to_file)
@@ -101,7 +101,7 @@ data = convert_dict_for_save_to_csv(tmp_dict)
 # data = [{'mountain' : 'Everest', 'height': '8848'},
 #       {'mountain' : 'K2 ', 'height': '8611'},
 #       {'mountain' : 'Kanchenjunga', 'height': '8586'}]
-with open('peak.csv', 'w') as csvFile:
+with open('test_best_scores_other_metrics.csv', 'w') as csvFile:
     # data[0].keys()
     # fields = [ 'height', 'mountain']
 
