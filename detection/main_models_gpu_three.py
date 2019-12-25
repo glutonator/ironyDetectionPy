@@ -15,7 +15,7 @@ max_sentence_length = 25
 len_of_vector_embeddings = 300
 postags_length = 46
 total_length = len_of_vector_embeddings + postags_length
-global_path_to_results = "results2_ft_merged/"
+global_path_to_results = "results3_ft_merged/"
 
 # XXXX, YYYY = get_data_for_network(total_length, max_sentence_length, 'both')
 # XXXX, YYYY = get_data_for_network(total_length, max_sentence_length, 'red')

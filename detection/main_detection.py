@@ -1,6 +1,7 @@
 from __future__ import print_function
 
 from pandas import DataFrame
+import pandas as pd
 
 from preproccesing.load_files import load_glove_and_fastText_model, load_input_data, save_output_data
 
@@ -183,11 +184,41 @@ def preprocess_data():
     save_output_data(data, preprocessed_dataPath + "____new___"+"irony.txt")
 
 
+def balance_input_data(data: DataFrame) -> DataFrame:
+    print('balancing started')
+    series = data['Label'].value_counts()
+    dataset_count_class_0 = series.get(key=0)
+    dataset_count_class_1 = series.get(key=1)
+    print(0, 1)
+    print(dataset_count_class_0, dataset_count_class_1)
+    df_class_0 = data[data['Label'] == 0]
+    df_class_1 = data[data['Label'] == 1]
+
+    if (dataset_count_class_1 > dataset_count_class_0):
+        df_class_1_under = df_class_1.sample(dataset_count_class_0)
+        df_test_under = pd.concat([df_class_0, df_class_1_under], axis=0)
+        data = df_test_under
+    elif (dataset_count_class_1 < dataset_count_class_0):
+        df_class_0_under = df_class_0.sample(dataset_count_class_1)
+        df_test_under = pd.concat([df_class_0_under, df_class_1], axis=0)
+        data = df_test_under
+
+    print('Random under-sampling:')
+    print(data['Label'].value_counts())
+    data = data.reset_index(drop=True)
+    # df_test_under['Label'].value_counts().plot(kind='bar', title='Count (target)');
+    print('balancing finished')
+    return data
+
+
 def prepare_data_for_network() -> DataFrame:
     model = load_glove_and_fastText_model(embeddingsPath + model_file)
+    # model = None
     print("model loaded")
     data: DataFrame = load_input_data(preprocessed_dataPath + preprocessed_file)
     del data['Tweet_index']
+
+    data = balance_input_data(data)
 
     print("data loaded")
     if dataset_name == 'reddit':

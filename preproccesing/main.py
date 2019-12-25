@@ -62,7 +62,7 @@ class DataSetThreeRegular(ParentDataSet):
 
 class DataSetThreeFigurative(ParentDataSet):
     _datasetName = 'three'
-    _input_file = 'preprocessed____figurative_test.csv_without_hastags_iron_sarc.txt'
+    _input_file = 'preprocessed____figurative.csv.txt'
 
     def __init__(self):
         super().__init__(self._datasetName, self._input_file)

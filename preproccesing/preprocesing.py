@@ -186,6 +186,7 @@ def translate_sentence_to_vectors_without_save(data: DataFrame, model: Word2VecK
         list_of_vectors = []
 
         # add postags
+        # print(i)
         list_of_tokens_in_sentance = data['Tweet_text'][i]
         list_of_tuples_of_tokens_and_tags = nltk.pos_tag(list_of_tokens_in_sentance)
         list_of_tags_in_order_in_sentance = [i[1] for i in list_of_tuples_of_tokens_and_tags]
