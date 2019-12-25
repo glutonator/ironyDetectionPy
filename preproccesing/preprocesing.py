@@ -13,6 +13,8 @@ from sklearn.preprocessing import LabelEncoder, OneHotEncoder
 
 import numpy as np
 
+from detection.elmo_embed import elmo_vectors
+
 embeddingsPath = 'embeddings/'
 
 
@@ -214,6 +216,48 @@ def translate_sentence_to_vectors_without_save(data: DataFrame, model: Word2VecK
     # data.to_json(output_filename)
     # return list_of_not_found_words
 
+def translate_sentence_to_vectors_without_save_with_elmo(data: DataFrame, elmo,
+                                                         output_filename: str, label_encoder: LabelEncoder,
+                                                         onehot_encoder: OneHotEncoder) -> DataFrame:
+    # silence warnings
+    pd.set_option('mode.chained_assignment', None)
+    list_of_not_found_words: List[str] = []
+    for i in range(0, data.shape[0]):
+        list_of_vectors = []
+
+        # add postags
+        # print(i)
+        list_of_tokens_in_sentance = data['Tweet_text'][i]
+        list_of_tuples_of_tokens_and_tags = nltk.pos_tag(list_of_tokens_in_sentance)
+        list_of_tags_in_order_in_sentance = [i[1] for i in list_of_tuples_of_tokens_and_tags]
+
+        list_of_tags_in_order_in_sentance_in_numeric_labels = label_encoder.transform(list_of_tags_in_order_in_sentance)
+        list_of_tags_in_order_in_sentance_in_numeric_labels = list_of_tags_in_order_in_sentance_in_numeric_labels.reshape(len(list_of_tags_in_order_in_sentance_in_numeric_labels), 1)
+        list_of_tags_in_order_in_sentance_in_onehot_encoded = onehot_encoder.transform(list_of_tags_in_order_in_sentance_in_numeric_labels)
+
+        count = 0
+        # print(data['Tweet_text'][i])
+        array = data['Tweet_text'][i]
+        vector_of_words = elmo_vectors(elmo, array)
+
+        for word_token in array:
+            try:
+                # vector_from_word = elmo.get_vector(word_token)
+                # vector_from_word = elmo_vectors(elmo, [word_token])
+                vector_from_word = vector_of_words[count][0]
+                # add postags
+                vector_onehot_encoded = list_of_tags_in_order_in_sentance_in_onehot_encoded[count]
+                list_of_vectors.append(np.append(vector_from_word, vector_onehot_encoded))
+            except KeyError:
+                list_of_not_found_words.append(word_token)
+
+            count = count + 1
+
+        data['Tweet_text'][i] = list_of_vectors
+
+    print('################')
+    print('creating vectors finished')
+    return data
 
 
 def print_all(data):

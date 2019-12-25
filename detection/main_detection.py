@@ -3,10 +3,12 @@ from __future__ import print_function
 from pandas import DataFrame
 import pandas as pd
 
+from detection.elmo_embed import provideElmo
 from preproccesing.load_files import load_glove_and_fastText_model, load_input_data, save_output_data
 
 from preproccesing.preprocesing import clean_messages, tokenize_data, translate_sentence_to_vectors, create_encoders, \
-    tokenize_data_reddit, clean_messages_two, translate_sentence_to_vectors_without_save
+    tokenize_data_reddit, clean_messages_two, translate_sentence_to_vectors_without_save, \
+    translate_sentence_to_vectors_without_save_with_elmo
 import datetime
 import sys
 
@@ -237,8 +239,12 @@ def limit_number_of_data(data: DataFrame, max_number_of_records_per_class) -> Da
     return data
 
 
-def prepare_data_for_network() -> DataFrame:
-    model = load_glove_and_fastText_model(embeddingsPath + model_file)
+def prepare_data_for_network(flag='model') -> DataFrame:
+    if flag == 'model':
+        model = load_glove_and_fastText_model(embeddingsPath + model_file)
+    else:
+        model = provideElmo()
+
     # model = None
     print("model loaded")
     data: DataFrame = load_input_data(preprocessed_dataPath + preprocessed_file)
@@ -256,10 +262,19 @@ def prepare_data_for_network() -> DataFrame:
 
     label_encoder, onehot_encoder = create_encoders("detection/")
 
-    data: DataFrame = \
-        translate_sentence_to_vectors_without_save(data, model,
-                                                   output_filename=vector_dataPath + vector_file,
-                                                   label_encoder=label_encoder, onehot_encoder=onehot_encoder)
+    # to jest ważne, bez tego nie działa z tf v2.0
+    # tf.disable_eager_execution()
+
+    if flag == 'model':
+        data: DataFrame = \
+            translate_sentence_to_vectors_without_save(data, model,
+                                                       output_filename=vector_dataPath + vector_file,
+                                                       label_encoder=label_encoder, onehot_encoder=onehot_encoder)
+    else:
+        data: DataFrame = \
+            translate_sentence_to_vectors_without_save_with_elmo(data, model,
+                                                                 output_filename=vector_dataPath + vector_file,
+                                                                 label_encoder=label_encoder, onehot_encoder=onehot_encoder)
 
     # print("translate_sentence_to_vectors finished")
     # print("_________________________________")

@@ -64,7 +64,7 @@ def get_data_from_dataset_one(len_of_vector_embeddings, max_sentence_length):
     return dataX_numpy, dataY_numpy
 
 
-def get_data_from_dataset_three(data: DataFrame,len_of_vector_embeddings, max_sentence_length):
+def get_data_from_dataset_three(data: DataFrame, len_of_vector_embeddings, max_sentence_length):
     # todo: split glove and fasttext
     # data: DataFrame = load_vectors(vector_dataPath + 'vector_data_fastText_dataset_three.txt')
     # data: DataFrame = load_vectors(vector_dataPath + 'vector_data_fastText_dataset_one.txt')

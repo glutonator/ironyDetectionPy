@@ -1,4 +1,7 @@
 from pandas import DataFrame
+import tensorflow.compat.v1 as tf
+
+
 from tensorflow_core.python.keras import Sequential
 
 from detection.create_models import get_all_models_gpu
@@ -13,7 +16,8 @@ max_sentence_length = 25
 # len_of_vector_embeddings = 50
 # len_of_vector_embeddings = 200
 # todo: change back
-len_of_vector_embeddings = 25
+# len_of_vector_embeddings = 25
+len_of_vector_embeddings = 1024
 # len_of_vector_embeddings = 300
 postags_length = 46
 total_length = len_of_vector_embeddings + postags_length
@@ -24,7 +28,15 @@ global_path_to_results = "results3_ft_merged/"
 # XXXX, YYYY = get_data_for_network(total_length, max_sentence_length, 'one')
 
 
-data: DataFrame = prepare_data_for_network()
+# to jest ważne, bez tego nie działa z tf v2.0
+tf.disable_eager_execution()
+
+#todo: check if correct
+#create with noraml model
+# data: DataFrame = prepare_data_for_network('model')
+#create with elmo
+data: DataFrame = prepare_data_for_network('elmo')
+
 
 XXXX, YYYY = get_data_from_dataset_three(data, total_length, max_sentence_length)
 
