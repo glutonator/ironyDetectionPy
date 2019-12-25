@@ -63,7 +63,9 @@ class DataSetThreeRegular(ParentDataSet):
 
 
 class EnvFastText:
-    model_file = 'wiki-news-300d-1M.vec'
+    # todo change back
+    # model_file = 'wiki-news-300d-1M.vec'
+    model_file = 'word2vec_25.txt'
 
     def __init__(self, data_set: ParentDataSet, parameter: str = ""):
         self.embedding = 'fastText'
@@ -85,11 +87,11 @@ class EnvGlove:
         self.vector_file = 'vector_data_' + self.embedding + '_dataset_' + self.dataset_name + '.txt'
 
 
-# env = EnvFastText(data_set=DataSetOne())
+env = EnvFastText(data_set=DataSetOne())
 # env = EnvFastText(data_set=DataSetReddit())
 
-#todo: zmianiać -> a potem ręcznie połączyć
-env = EnvFastText(data_set=DataSetThreeIrony(), parameter="irony")
+# todo: zmianiać -> a potem ręcznie połączyć
+# env = EnvFastText(data_set=DataSetThreeIrony(), parameter="irony")
 # env = EnvFastText(data_set=DataSetThreeSarcasm(), parameter="sarcasm")
 # env = EnvFastText(data_set=DataSetThreeRegular(), parameter="regular")
 
@@ -103,7 +105,9 @@ embedding = env.embedding
 model_file = env.model_file
 input_file = env.input_file
 preprocessed_file = env.preprocessed_file
-preprocessed_file = 'three_regular_figurative.txt'
+# todo: change back
+# preprocessed_file = 'three_regular_figurative.txt'
+preprocessed_file = 'preprocessed_data_fastText_dataset_one.txt'
 # preprocessed_file = 'new_new_merged.txt'
 preprocessed_file_clean = env.preprocessed_file_clean
 vector_file = env.vector_file
@@ -181,7 +185,7 @@ def preprocess_data():
     #     add_label_based_on_data_file(data, 1)
 
     # save to file
-    save_output_data(data, preprocessed_dataPath + "____new___"+"irony.txt")
+    save_output_data(data, preprocessed_dataPath + "____new___" + "irony.txt")
 
 
 def balance_input_data(data: DataFrame) -> DataFrame:
@@ -211,6 +215,28 @@ def balance_input_data(data: DataFrame) -> DataFrame:
     return data
 
 
+def limit_number_of_data(data: DataFrame, max_number_of_records_per_class) -> DataFrame:
+    print('limiting started')
+    series = data['Label'].value_counts()
+    dataset_count_class_0 = series.get(key=0)
+    dataset_count_class_1 = series.get(key=1)
+    print(0, 1)
+    print(dataset_count_class_0, dataset_count_class_1)
+    df_class_0 = data[data['Label'] == 0]
+    df_class_1 = data[data['Label'] == 1]
+
+    df_class_0_under = df_class_0.sample(max_number_of_records_per_class)
+    df_class_1_under = df_class_1.sample(max_number_of_records_per_class)
+    df_test_under = pd.concat([df_class_0_under, df_class_1_under], axis=0)
+    data = df_test_under
+
+    print('limiting number of records:')
+    print(data['Label'].value_counts())
+    data = data.reset_index(drop=True)
+    print('limiting finished')
+    return data
+
+
 def prepare_data_for_network() -> DataFrame:
     model = load_glove_and_fastText_model(embeddingsPath + model_file)
     # model = None
@@ -219,6 +245,7 @@ def prepare_data_for_network() -> DataFrame:
     del data['Tweet_index']
 
     data = balance_input_data(data)
+    # data = limit_number_of_data(data, 10000)
 
     print("data loaded")
     if dataset_name == 'reddit':
@@ -239,7 +266,6 @@ def prepare_data_for_network() -> DataFrame:
     # print(list_of_not_found_words)
     # print("size:" + str(len(list_of_not_found_words)))
     return data
-
 
 # start = datetime.datetime.now()
 #

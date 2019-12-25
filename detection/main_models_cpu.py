@@ -1,9 +1,10 @@
+from tensorflow_core.python.keras import Sequential
+
 from detection.create_models import get_all_models_gpu, get_all_models_cpu
 from detection.data_inputs import split_data_sets, get_data_for_network
 
 from detection.main_functions import trail_all
 from typing import List
-from keras import Sequential
 
 # constance variables
 max_sentence_length = 10

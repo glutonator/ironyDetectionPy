@@ -7,11 +7,12 @@ import os
 import time
 import numpy as np
 
-import keras
-from keras import Sequential
 from typing import List
 
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+from tensorflow_core.python.keras import Sequential
+from tensorflow_core.python.keras.callbacks import ModelCheckpoint, EarlyStopping
+from tensorflow_core.python.keras.optimizer_v2.adam import Adam
 
 import detection.irony_models_gpu as di_gpu
 from detection.my_plots import generate_plots
@@ -22,13 +23,15 @@ def train_model_learing_rate(model: Sequential, X_train, X_val, X_test, Y_train,
     file_with_model_weights = "weights.best.hdf5"
 
     model.summary()
-    adam = keras.optimizers.Adam(lr=lr)
+    adam = Adam(lr=lr)
     model.compile(loss='binary_crossentropy', optimizer=adam, metrics=['accuracy'])
 
     # min loss
-    save_best = keras.callbacks.ModelCheckpoint(path + file_with_model_weights, monitor='val_loss', verbose=1,
+
+    save_best = ModelCheckpoint(path + file_with_model_weights, monitor='val_loss', verbose=1,
                                                 save_best_only=True)
-    early_stop = keras.callbacks.EarlyStopping(monitor='val_loss', min_delta=0, patience=3, verbose=1)
+
+    early_stop = EarlyStopping(monitor='val_loss', min_delta=0, patience=3, verbose=1)
 
 
     # max acc

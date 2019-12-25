@@ -1,6 +1,6 @@
 import datetime
 import matplotlib.pyplot as plt
-from keras.callbacks import History
+from tensorflow_core.python.keras.callbacks import History
 
 
 def generate_plots(results: History, path):
@@ -21,8 +21,8 @@ def generate_plots(results: History, path):
     plt.clf()
 
     saveToFile = "accuracy"
-    plt.plot(results.history['acc'], 'r', linewidth=3.0)
-    plt.plot(results.history['val_acc'], 'b', linewidth=3.0)
+    plt.plot(results.history['accuracy'], 'r', linewidth=3.0)
+    plt.plot(results.history['val_accuracy'], 'b', linewidth=3.0)
     plt.legend(['Training Accuracy', 'Val Accuracy'], fontsize=18)
     plt.xlabel('Number of epochs ', fontsize=16)
     plt.ylabel('Accuracy', fontsize=16)

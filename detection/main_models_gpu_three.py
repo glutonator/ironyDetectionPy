@@ -1,4 +1,5 @@
 from pandas import DataFrame
+from tensorflow_core.python.keras import Sequential
 
 from detection.create_models import get_all_models_gpu
 from detection.data_inputs import split_data_sets, get_data_for_network, get_data_from_dataset_three
@@ -6,13 +7,14 @@ from detection.main_detection import prepare_data_for_network
 
 from detection.main_functions import trail_all
 from typing import List
-from keras import Sequential
 
 # constance variables
 max_sentence_length = 25
 # len_of_vector_embeddings = 50
 # len_of_vector_embeddings = 200
-len_of_vector_embeddings = 300
+# todo: change back
+len_of_vector_embeddings = 25
+# len_of_vector_embeddings = 300
 postags_length = 46
 total_length = len_of_vector_embeddings + postags_length
 global_path_to_results = "results3_ft_merged/"

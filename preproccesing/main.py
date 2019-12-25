@@ -10,7 +10,7 @@ import datetime
 import sys
 
 embeddingsPath = 'embeddings/'
-input_filesPath = 'input_files/three/'
+input_filesPath = 'input_files/'
 preprocessed_dataPath = 'preprocessed_data/'
 vector_dataPath = 'vector_data/'
 
@@ -92,14 +92,14 @@ class EnvGlove:
         self.vector_file = 'vector_data_' + self.embedding + '_dataset_' + self.dataset_name + '.txt'
 
 
-# env = EnvFastText(data_set=DataSetOne())
+env = EnvFastText(data_set=DataSetOne())
 # env = EnvFastText(data_set=DataSetReddit())
 
 #todo: zmianiać -> a potem ręcznie połączyć
 # env = EnvFastText(data_set=DataSetThreeIrony(), parameter="irony")
 # env = EnvFastText(data_set=DataSetThreeSarcasm(), parameter="sarcasm")
 # env = EnvFastText(data_set=DataSetThreeRegular(), parameter="regular")
-env = EnvFastText(data_set=DataSetThreeFigurative(), parameter="figurative")
+# env = EnvFastText(data_set=DataSetThreeFigurative(), parameter="figurative")
 
 
 

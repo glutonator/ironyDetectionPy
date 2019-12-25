@@ -1,9 +1,10 @@
 import inspect
 
-from keras import Sequential
-from keras.layers import LSTM, Dense, Dropout, Bidirectional
+from tensorflow.keras import Sequential
+from tensorflow.keras.layers import Dense, Dropout, Bidirectional, Flatten, Conv2D, Conv1D, GlobalMaxPooling1D
 from sklearn import svm
 from sklearn.metrics import accuracy_score
+from tensorflow_core.python.keras.layers import LSTM
 
 
 def baseline_00(X_train, X_val, X_test, Y_train, Y_val, Y_test):

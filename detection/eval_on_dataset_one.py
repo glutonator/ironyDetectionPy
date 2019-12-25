@@ -7,16 +7,13 @@ import os
 import time
 import numpy as np
 
-import keras
-from keras import Sequential
 from typing import List
 
-from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+from tensorflow_core.python.keras import Sequential
 
 from detection.create_models import get_all_models_gpu
 from detection.data_inputs import get_data_from_dataset_one
 from detection.main_functions import eval_model_on_dataset_one, eval_f1_on_dataset_one
-from detection.my_plots import generate_plots
 
 
 

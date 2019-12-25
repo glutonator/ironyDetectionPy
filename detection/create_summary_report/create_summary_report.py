@@ -4,7 +4,7 @@ from typing import Tuple
 import pprint
 import csv
 
-global_path = '../../results3_ft_merged/' + '2_balanced_dataset_1st_try/'
+global_path = '../../results3_ft_merged/' + '3_cnn_test/'
 path = '../../results3_ft_merged/' + 'test_run/' + '1573398849_give_model_00/'
 
 file = 'one_test_best_scores_other_metrics.txt'
@@ -44,7 +44,7 @@ def create_dict_with_values_from_file(path_to_file: str):
     return read_values_from_list(read_from_file(path_to_file))
 
 
-directory = '../../results3_ft_merged/' + '2_balanced_dataset_1st_try/'
+directory = '../../results3_ft_merged/' + '3_cnn_test/'
 
 
 def get_list_of_subdirectories(directory: str) -> List[str]:
@@ -63,7 +63,7 @@ def remove_prefix_from_str(string: str, prefix: str) -> str:
     return string
 
 
-def get_dict_with_metrics(directory: str, main_name='1577205913_') -> Dict:
+def get_dict_with_metrics(directory: str, main_name='') -> Dict:
     list_of_subdir: List[str] = get_list_of_subdirectories(directory)
     list_of_model_names: List[str] = []
 
@@ -95,13 +95,14 @@ def convert_dict_for_save_to_csv(loc_dict: Dict):
     return output_list
 
 
-tmp_dict = get_dict_with_metrics(directory)
+main_name = '1577290625_'
+tmp_dict = get_dict_with_metrics(directory, main_name=main_name)
 data = convert_dict_for_save_to_csv(tmp_dict)
 
 # data = [{'mountain' : 'Everest', 'height': '8848'},
 #       {'mountain' : 'K2 ', 'height': '8611'},
 #       {'mountain' : 'Kanchenjunga', 'height': '8586'}]
-with open('1577231116_' + 'test_best_scores_other_metrics.csv', 'w') as csvFile:
+with open(main_name + 'test_best_scores_other_metrics.csv', 'w') as csvFile:
     # data[0].keys()
     # fields = [ 'height', 'mountain']
 
