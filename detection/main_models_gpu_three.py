@@ -12,7 +12,9 @@ from detection.main_functions import trail_all
 from typing import List
 
 # constance variables
-max_sentence_length = 25
+# todo: change back
+max_sentence_length = 35
+# max_sentence_length = 25
 # len_of_vector_embeddings = 50
 # len_of_vector_embeddings = 200
 # todo: change back

@@ -21,3 +21,16 @@ def elmo_vectors(elmo, x):
         sess.run(tf.tables_initializer())
         # return average of ELMo features
         return sess.run(embeddings)
+
+
+# Yield successive n-sized
+# chunks from l.
+def divide_chunks(my_list, nuber_of_elem_in_batch):
+    # looping till length l
+    for i in range(0, len(my_list), nuber_of_elem_in_batch):
+        yield my_list[i:i + nuber_of_elem_in_batch]
+
+    # How many elements each
+
+
+# list should have

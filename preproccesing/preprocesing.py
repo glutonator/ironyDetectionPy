@@ -1,4 +1,5 @@
 import re
+from collections import Counter
 from typing import List, Any, Union
 
 import nltk
@@ -13,7 +14,7 @@ from sklearn.preprocessing import LabelEncoder, OneHotEncoder
 
 import numpy as np
 
-from detection.elmo_embed import elmo_vectors
+from detection.elmo_embed import elmo_vectors, divide_chunks
 
 embeddingsPath = 'embeddings/'
 
@@ -222,6 +223,31 @@ def translate_sentence_to_vectors_without_save_with_elmo(data: DataFrame, elmo,
     # silence warnings
     pd.set_option('mode.chained_assignment', None)
     list_of_not_found_words: List[str] = []
+    #data.to_numpy()[:,1]
+    list_for_elmo = []
+    for tokenized_sentence in data.to_numpy()[:, 1]:
+        merged_sentence = ' '.join(tokenized_sentence)
+        list_for_elmo.append(merged_sentence)
+
+    print('get elmos embedings')
+
+    list_splited_into_batches = list(divide_chunks(list_for_elmo, 50))
+    number_of_sentances = len(list_for_elmo)
+    longest_sentance = len(max(list_for_elmo, key=len))
+    vector_of_words_for_whole_dataset = np.zeros(shape=(number_of_sentances, longest_sentance, 1024))
+
+    list_count = 0
+    tmp = Counter([len(eee) for eee in list_for_elmo])
+    for small_list in list_splited_into_batches:
+        vector_of_words_for_batch = elmo_vectors(elmo, small_list)
+        for single_sentence in vector_of_words_for_batch:
+            result = np.zeros(shape=(longest_sentance, 1024))
+            result[:single_sentence.shape[0], :single_sentence.shape[1]] = single_sentence
+            # Counter(count_of_list_of_sentences)
+            vector_of_words_for_whole_dataset[list_count] = result
+            list_count = list_count + 1
+    print('elmos embedings recieved')
+
     for i in range(0, data.shape[0]):
         list_of_vectors = []
 
@@ -238,13 +264,13 @@ def translate_sentence_to_vectors_without_save_with_elmo(data: DataFrame, elmo,
         count = 0
         # print(data['Tweet_text'][i])
         array = data['Tweet_text'][i]
-        vector_of_words = elmo_vectors(elmo, array)
-
+        # vector_of_words = elmo_vectors(elmo, array)
+        vector_of_words = vector_of_words_for_whole_dataset[i]
         for word_token in array:
             try:
                 # vector_from_word = elmo.get_vector(word_token)
                 # vector_from_word = elmo_vectors(elmo, [word_token])
-                vector_from_word = vector_of_words[count][0]
+                vector_from_word = vector_of_words[count]
                 # add postags
                 vector_onehot_encoded = list_of_tags_in_order_in_sentance_in_onehot_encoded[count]
                 list_of_vectors.append(np.append(vector_from_word, vector_onehot_encoded))
