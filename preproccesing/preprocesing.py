@@ -61,16 +61,8 @@ def clean_messages(data: DataFrame, model: Word2VecKeyedVectors):
     # remove "|"
     data['Tweet_text'] = data['Tweet_text'].str.replace('|', ' ', regex=False)
 
-    # TODO: dodać tutaj to rozpoznawanie modelu z contractions i konwersje do długich form
-    cont = Contractions(kv_model=model)
-
-    number_of_sentences = data.shape[0]
-    for i in range(0, number_of_sentences):
-        # print(list(cont.expand_texts([data['Tweet_text'][i]]))[-1])
-        data['Tweet_text'][i] = list(cont.expand_texts([data['Tweet_text'][i]]))[-1]
-        # data['Tweet_text'] = data['Tweet_text'].str.lower()
-
-    print('Contractions finished')
+    # todo: uncomment if needed comented clearing contractions
+    # process_contractions(data, model)
 
     # convert to lowercase
     data['Tweet_text'] = data['Tweet_text'].str.lower()
@@ -83,6 +75,17 @@ def clean_messages(data: DataFrame, model: Word2VecKeyedVectors):
 
     # TODO:  KeyError: "word 'erv's' not in vocabulary"
     # data['Tweet_text'] = data['Tweet_text'].str.replace(rf'[{string.punctuation}]', '')
+
+
+def process_contractions(data, model):
+    # TODO: dodać tutaj to rozpoznawanie modelu z contractions i konwersje do długich form
+    cont = Contractions(kv_model=model)
+    number_of_sentences = data.shape[0]
+    for i in range(0, number_of_sentences):
+        # print(list(cont.expand_texts([data['Tweet_text'][i]]))[-1])
+        data['Tweet_text'][i] = list(cont.expand_texts([data['Tweet_text'][i]]))[-1]
+        # data['Tweet_text'] = data['Tweet_text'].str.lower()
+    print('Contractions finished')
 
 
 def clean_messages_two(data: DataFrame):

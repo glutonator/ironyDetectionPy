@@ -23,7 +23,7 @@ class ParentDataSet:
 
 class DataSetOne(ParentDataSet):
     _datasetName = 'one'
-    _input_file = 'SemEval2018-T3-train-taskA_merged_with_gold_test_taskA.txt'
+    _input_file = 'SemEval2018-T3-train-taskA_merged_with_gold_test_taskA_resolve_contarations.txt'
 
     def __init__(self):
         super().__init__(self._datasetName, self._input_file)
@@ -70,7 +70,8 @@ class DataSetThreeFigurative(ParentDataSet):
 
 
 class EnvFastText:
-    model_file = 'wiki-news-300d-1M.vec'
+    model_file = 'word2vec_25.txt'
+    # model_file = 'wiki-news-300d-1M.vec'
 
     def __init__(self, data_set: ParentDataSet, parameter: str = ""):
         self.embedding = 'fastText'
