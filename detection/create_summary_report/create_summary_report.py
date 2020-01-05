@@ -4,7 +4,7 @@ from typing import Tuple
 import pprint
 import csv
 
-global_path = '../../results3_ft_merged/' + '3_cnn_test/'
+global_path = '../../results4_ft_merged/' #+ '3_cnn_test/'
 path = '../../results3_ft_merged/' + 'test_run/' + '1573398849_give_model_00/'
 
 file = 'one_test_best_scores_other_metrics.txt'
@@ -44,7 +44,7 @@ def create_dict_with_values_from_file(path_to_file: str):
     return read_values_from_list(read_from_file(path_to_file))
 
 
-directory = '../../results3_ft_merged/' + '3_cnn_test/'
+directory = '../../results4_ft_merged/' #+ '3_cnn_test/'
 
 
 def get_list_of_subdirectories(directory: str) -> List[str]:
@@ -95,7 +95,7 @@ def convert_dict_for_save_to_csv(loc_dict: Dict):
     return output_list
 
 
-main_name = '1577290625_'
+main_name = '1578261759'
 tmp_dict = get_dict_with_metrics(directory, main_name=main_name)
 data = convert_dict_for_save_to_csv(tmp_dict)
 

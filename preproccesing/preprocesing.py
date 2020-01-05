@@ -19,24 +19,38 @@ from detection.elmo_embed import elmo_vectors, divide_chunks
 embeddingsPath = 'embeddings/'
 
 
+#todo: check if emoji exist in vord to vec
+def split_emoji(passed_string: str):
+    matches: list[str] = re.findall(r"[:][\w-]+[:]", passed_string)
+    for match in matches:
+        replaced_string: str = match.replace(':', '').replace('_', " ").replace('-', " ")
+        replaced_string = ' emote ' + replaced_string
+        passed_string = passed_string.replace(match, replaced_string)
+
+    return passed_string
+
+#(([[a-z]+[_])+)
+# :(([[a-z]+[_])+[a-z]+):
+
+def clean_messages222(data: DataFrame, model: Word2VecKeyedVectors):
+    data['Tweet_text'] = data['Tweet_text'].apply(split_emoji)
+
+
 def clean_messages(data: DataFrame, model: Word2VecKeyedVectors):
     # remove urls
     data['Tweet_text'] = data['Tweet_text'].str \
-        .replace('(http|ftp|https)://([\\w_-]+(?:(?:\\.[\\w_\\s-]+)+))([\\w.,@?^=%&:/~+#-]*[\\w@?^=%&/~+#-])?', '',
+        .replace('(http|ftp|https)://([\\w_-]+(?:(?:\\.[\\w_\\s-]+)+))([\\w.,@?^=%&:/~+#-]*[\\w@?^=%&/~+#-])?', ' url ',
                  regex=True)
 
     data['Tweet_text'] = data['Tweet_text'].str.replace('\n', ' ', regex=True)
 
+    # split emoji
+    data['Tweet_text'] = data['Tweet_text'].apply(split_emoji)
 
     # remove nicks
     data['Tweet_text'] = data['Tweet_text'].str.replace('@[A-Za-z0-9_]+', ' @ username @ ', regex=True)
 
-    # remove hashtags
-    # data['Tweet_text'] = data['Tweet_text'].str.replace('\s([#][\w_-]+)', '', regex=True)
-    # remove hastags also from the begging of sentence
-    # data['Tweet_text'] = data['Tweet_text'].str.replace('([#][\\w_-]+)', '', regex=True)
-
-    # replace hashtags
+    # replace hashtags todo: uncomment !!!!!!!!!!!!1
     parseHashtags(data)
 
     # replace time
@@ -48,18 +62,23 @@ def clean_messages(data: DataFrame, model: Word2VecKeyedVectors):
     # remove '"'
     data['Tweet_text'] = data['Tweet_text'].str.replace('"', ' ', regex=True)
 
-    # remove “ and ”
-    # data['Tweet_text'] = data['Tweet_text'].str.replace('\u201c', ' ', regex=True)
-    # data['Tweet_text'] = data['Tweet_text'].str.replace('\u201d', ' ', regex=True)
-    #
-    #
-    # data['Tweet_text'] = data['Tweet_text'].str.replace('\u2019', '\'', regex=True)
-    # data['Tweet_text'] = data['Tweet_text'].str.replace('\u2018', '\'', regex=True)
-
-
-
     # remove "|"
     data['Tweet_text'] = data['Tweet_text'].str.replace('|', ' ', regex=False)
+
+    # remove white dots combos
+    data['Tweet_text'] = data['Tweet_text'].str.replace('\\s\\.\\s\\.\\s', '.', regex=True)
+    data['Tweet_text'] = data['Tweet_text'].str.replace('\\.\\s\\.', '.', regex=True)
+    data['Tweet_text'] = data['Tweet_text'].str.replace('\\.+', '.', regex=True)
+    # data['Tweet_text'] = data['Tweet_text'].apply(lambda x: " ".join(x.split()))
+
+    # " ".join(s.split())
+
+    # remove "..."
+    data['Tweet_text'] = data['Tweet_text'].str.replace('...', '.', regex=False)
+
+    # remove ".."
+    data['Tweet_text'] = data['Tweet_text'].str.replace('..', '.', regex=False)
+
 
     # todo: uncomment if needed comented clearing contractions
     # process_contractions(data, model)
@@ -181,12 +200,20 @@ def translate_sentence_to_vectors(data: DataFrame, model: Word2VecKeyedVectors,
     data.to_json(output_filename)
     return list_of_not_found_words
 
+def show_missing_words(list_of_not_found_words: List[str]):
+    qqq = list_of_not_found_words
+    qqq = list(filter(lambda x: x.find('#') == -1 & x.find('...') == -1 & x.find('..') == -1, list_of_not_found_words))
+
+    print(qqq)
+    return qqq
 
 def translate_sentence_to_vectors_without_save(data: DataFrame, model: Word2VecKeyedVectors,
                                   output_filename: str, label_encoder: LabelEncoder,
                                   onehot_encoder: OneHotEncoder) -> DataFrame:
     # silence warnings
     pd.set_option('mode.chained_assignment', None)
+
+    series_of_values_asc = data['Tweet_text'].str.len().sort_values(ascending=False)
     list_of_not_found_words: List[str] = []
     for i in range(0, data.shape[0]):
         list_of_vectors = []
@@ -216,6 +243,7 @@ def translate_sentence_to_vectors_without_save(data: DataFrame, model: Word2VecK
 
         data['Tweet_text'][i] = list_of_vectors
 
+    show_missing_words(list_of_not_found_words)
     return data
     # data.to_json(output_filename)
     # return list_of_not_found_words

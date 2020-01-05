@@ -70,8 +70,8 @@ class DataSetThreeFigurative(ParentDataSet):
 
 
 class EnvFastText:
-    model_file = 'word2vec_25.txt'
-    # model_file = 'wiki-news-300d-1M.vec'
+    # model_file = 'word2vec_25.txt'
+    model_file = 'wiki-news-300d-1M.vec'
 
     def __init__(self, data_set: ParentDataSet, parameter: str = ""):
         self.embedding = 'fastText'
@@ -172,7 +172,8 @@ def add_label_based_on_data_file(data: DataFrame, value_to_set):
 
 def preprocess_data():
     # wczytywanie modelu z plliku:
-    model = load_glove_and_fastText_model(embeddingsPath + model_file)
+    # model = load_glove_and_fastText_model(embeddingsPath + model_file)
+    model = None
     data: DataFrame = load_input_data(input_filesPath + input_file)
     #
     # todo: uncomment
@@ -193,56 +194,56 @@ def preprocess_data():
     save_output_data(data, preprocessed_dataPath + preprocessed_file)
 
 
-def preprocess_data_tmp():
-    # wczytywanie modelu z plliku:
-    # model = load_glove_and_fastText_model(embeddingsPath + model_file)
-    # data: DataFrame = load_input_data(input_filesPath + input_file)
-    data: DataFrame = load_input_data(preprocessed_dataPath + "tmp/preprocessed_data_fastText_dataset_threeirony.txt")
-    # todo: uncomment
-    # clean_messages(data, model)
-    clean_messages_two(data)
+# def preprocess_data_tmp():
+#     # wczytywanie modelu z plliku:
+#     # model = load_glove_and_fastText_model(embeddingsPath + model_file)
+#     # data: DataFrame = load_input_data(input_filesPath + input_file)
+#     data: DataFrame = load_input_data(preprocessed_dataPath + "tmp/preprocessed_data_fastText_dataset_threeirony.txt")
+#     # todo: uncomment
+#     # clean_messages(data, model)
+#     clean_messages_two(data)
+#
+#     # replace -1 to 0 in reddit dataset
+#     if dataset_name == 'reddit':
+#         unify_labels(data)
+#
+#     # if dataset_name == 'three':
+#     #     #todo: zmianiać w zależności od datasetu
+#     #     # sarkazm i ironia -> Label =1
+#     #     #regular -> label = 0
+#     #     # add_label_based_on_data_file(data, 0)
+#     #     add_label_based_on_data_file(data, 1)
+#
+#     # save to file
+#     save_output_data(data, preprocessed_dataPath + "____new___"+"irony.txt")
 
-    # replace -1 to 0 in reddit dataset
-    if dataset_name == 'reddit':
-        unify_labels(data)
 
-    # if dataset_name == 'three':
-    #     #todo: zmianiać w zależności od datasetu
-    #     # sarkazm i ironia -> Label =1
-    #     #regular -> label = 0
-    #     # add_label_based_on_data_file(data, 0)
-    #     add_label_based_on_data_file(data, 1)
-
-    # save to file
-    save_output_data(data, preprocessed_dataPath + "____new___"+"irony.txt")
-
-
-def prepare_data_for_network():
-    # model = load_glove_model('word2vec_50.txt')
-    model = load_glove_and_fastText_model(embeddingsPath + model_file)
-    # model = load_FastText_model(embeddingsPath+'word2vec.txt')
-    print("model loaded")
-    data: DataFrame = load_input_data(preprocessed_dataPath + preprocessed_file)
-    del data['Tweet_index']
-
-    print("data loaded")
-    if dataset_name == 'reddit':
-        tokenize_data_reddit(data)
-    else:
-        tokenize_data(data)
-    print("tokenize_data finished")
-
-    label_encoder, onehot_encoder = create_encoders()
-
-    list_of_not_found_words = \
-        translate_sentence_to_vectors(data, model,
-                                      output_filename=vector_dataPath + vector_file,
-                                      label_encoder=label_encoder, onehot_encoder=onehot_encoder)
-
-    print("translate_sentence_to_vectors finished")
-    print("_________________________________")
-    print(list_of_not_found_words)
-    print("size:" + str(len(list_of_not_found_words)))
+# def prepare_data_for_network():
+#     # model = load_glove_model('word2vec_50.txt')
+#     model = load_glove_and_fastText_model(embeddingsPath + model_file)
+#     # model = load_FastText_model(embeddingsPath+'word2vec.txt')
+#     print("model loaded")
+#     data: DataFrame = load_input_data(preprocessed_dataPath + preprocessed_file)
+#     del data['Tweet_index']
+#
+#     print("data loaded")
+#     if dataset_name == 'reddit':
+#         tokenize_data_reddit(data)
+#     else:
+#         tokenize_data(data)
+#     print("tokenize_data finished")
+#
+#     label_encoder, onehot_encoder = create_encoders()
+#
+#     list_of_not_found_words = \
+#         translate_sentence_to_vectors(data, model,
+#                                       output_filename=vector_dataPath + vector_file,
+#                                       label_encoder=label_encoder, onehot_encoder=onehot_encoder)
+#
+#     print("translate_sentence_to_vectors finished")
+#     print("_________________________________")
+#     print(list_of_not_found_words)
+#     print("size:" + str(len(list_of_not_found_words)))
 
 
 start = datetime.datetime.now()

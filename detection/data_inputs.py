@@ -80,6 +80,8 @@ def get_data_from_dataset_three(data: DataFrame, len_of_vector_embeddings, max_s
     dataX_numpy: Type[numpy.ndarray] = dataX['Tweet_text'].to_numpy(copy=True)
     number_of_sentences = len(dataX_numpy)
 
+    other_count = dataX['Tweet_text'].str.len()
+
     count_of_list_of_sentences = []
 
     # maksymalna dlugość zdania
