@@ -16,7 +16,11 @@ def provideElmo():
 def elmo_vectors(elmo, x):
     embeddings = elmo(x, signature="default", as_dict=True)["elmo"]
 
-    with tf.Session() as sess:
+    config = tf.ConfigProto(
+        device_count={'GPU': 0}
+    )
+
+    with tf.Session(config=config) as sess:
         sess.run(tf.global_variables_initializer())
         sess.run(tf.tables_initializer())
         # return average of ELMo features

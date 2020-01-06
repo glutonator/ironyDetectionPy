@@ -13,18 +13,18 @@ from typing import List
 
 # constance variables
 # todo: change back
-max_sentence_length = 50
-# max_sentence_length = 35
+# max_sentence_length = 5
+max_sentence_length = 35
 # max_sentence_length = 25
 # len_of_vector_embeddings = 50
 # len_of_vector_embeddings = 200
 # todo: change back
 # len_of_vector_embeddings = 25
-# len_of_vector_embeddings = 1024
-len_of_vector_embeddings = 300
+len_of_vector_embeddings = 1024
+# len_of_vector_embeddings = 300
 postags_length = 46
 total_length = len_of_vector_embeddings + postags_length
-global_path_to_results = "results4_ft_merged/"
+global_path_to_results = "results5_ft_merged/"
 
 # XXXX, YYYY = get_data_for_network(total_length, max_sentence_length, 'both')
 # XXXX, YYYY = get_data_for_network(total_length, max_sentence_length, 'red')
@@ -39,9 +39,9 @@ tf.disable_eager_execution()
 
 #todo: check if correct
 #create with noraml model
-data: DataFrame = prepare_data_for_network('model')
+# data: DataFrame = prepare_data_for_network(max_sentence_length, 'model')
 #create with elmo
-# data: DataFrame = prepare_data_for_network('elmo')
+data: DataFrame = prepare_data_for_network(max_sentence_length, 'elmo')
 
 
 XXXX, YYYY = get_data_from_dataset_three(data, total_length, max_sentence_length)

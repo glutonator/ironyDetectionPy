@@ -238,10 +238,16 @@ def limit_number_of_data(data: DataFrame, max_number_of_records_per_class) -> Da
     print('limiting finished')
     return data
 
+def reduce_to_max_sentence_length(passed_string: str, max_sentence_length):
+    if len(passed_string.split()) > max_sentence_length:
+        passed_string = " ".join(passed_string.split()[:50])
 
-def prepare_data_for_network(flag='model') -> DataFrame:
+    return passed_string
+
+def prepare_data_for_network(max_sentence_length, flag='model') -> DataFrame:
     if flag == 'model':
-        model = load_glove_and_fastText_model(embeddingsPath + model_file)
+        # model = load_glove_and_fastText_model(embeddingsPath + model_file)
+        model = None
     else:
         model = provideElmo()
 
@@ -252,6 +258,9 @@ def prepare_data_for_network(flag='model') -> DataFrame:
 
     # todo: uncomment
     data = balance_input_data(data)
+
+    data['Tweet_text'] = data['Tweet_text'].apply(reduce_to_max_sentence_length, args=(max_sentence_length,))
+
     # data = limit_number_of_data(data, 10000)
 
     print("data loaded")

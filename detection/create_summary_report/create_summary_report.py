@@ -4,12 +4,10 @@ from typing import Tuple
 import pprint
 import csv
 
-global_path = '../../results4_ft_merged/' #+ '3_cnn_test/'
-path = '../../results3_ft_merged/' + 'test_run/' + '1573398849_give_model_00/'
-
-file = 'one_test_best_scores_other_metrics.txt'
-
-path_to_file = path + file
+global_path = '../../results5_ft_merged/' + 'elmo_1/'
+directory = global_path
+# directory = '../../results4_ft_merged/' + 'third_try/'
+main_name = '1578330034_'
 
 
 def read_from_file(path_to_file: str) -> List[str]:
@@ -44,7 +42,6 @@ def create_dict_with_values_from_file(path_to_file: str):
     return read_values_from_list(read_from_file(path_to_file))
 
 
-directory = '../../results4_ft_merged/' #+ '3_cnn_test/'
 
 
 def get_list_of_subdirectories(directory: str) -> List[str]:
@@ -95,17 +92,11 @@ def convert_dict_for_save_to_csv(loc_dict: Dict):
     return output_list
 
 
-main_name = '1578261759'
 tmp_dict = get_dict_with_metrics(directory, main_name=main_name)
 data = convert_dict_for_save_to_csv(tmp_dict)
 
-# data = [{'mountain' : 'Everest', 'height': '8848'},
-#       {'mountain' : 'K2 ', 'height': '8611'},
-#       {'mountain' : 'Kanchenjunga', 'height': '8586'}]
-with open(main_name + 'test_best_scores_other_metrics.csv', 'w') as csvFile:
-    # data[0].keys()
-    # fields = [ 'height', 'mountain']
 
+with open(main_name + 'test_best_scores_other_metrics.csv', 'w') as csvFile:
 
     # fields = data[0].keys()
     # accuracy ,precision ,recall ,f1 ,model

@@ -2,6 +2,7 @@ import re
 from collections import Counter
 from typing import List, Any, Union
 
+import datetime
 import nltk
 import pandas as pd
 import wordninja
@@ -202,7 +203,7 @@ def translate_sentence_to_vectors(data: DataFrame, model: Word2VecKeyedVectors,
 
 def show_missing_words(list_of_not_found_words: List[str]):
     qqq = list_of_not_found_words
-    qqq = list(filter(lambda x: x.find('#') == -1 & x.find('...') == -1 & x.find('..') == -1, list_of_not_found_words))
+    # qqq = list(filter(lambda x: x.find('#') == -1 & x.find('...') == -1 & x.find('..') == -1, list_of_not_found_words))
 
     print(qqq)
     return qqq
@@ -262,7 +263,7 @@ def translate_sentence_to_vectors_without_save_with_elmo(data: DataFrame, elmo,
 
     print('get elmos embedings')
 
-    list_splited_into_batches = list(divide_chunks(list_for_elmo, 50))
+    list_splited_into_batches = list(divide_chunks(list_for_elmo, 200))
     number_of_sentances = len(list_for_elmo)
     longest_sentance = len(max(list_for_elmo, key=len))
     vector_of_words_for_whole_dataset = np.zeros(shape=(number_of_sentances, longest_sentance, 1024))
@@ -271,12 +272,21 @@ def translate_sentence_to_vectors_without_save_with_elmo(data: DataFrame, elmo,
     tmp = Counter([len(eee) for eee in list_for_elmo])
     for small_list in list_splited_into_batches:
         vector_of_words_for_batch = elmo_vectors(elmo, small_list)
+        print('elmo vectors for batch gotten ')
         for single_sentence in vector_of_words_for_batch:
+            ###### time
+            # start = datetime.datetime.now()
+
             result = np.zeros(shape=(longest_sentance, 1024))
             result[:single_sentence.shape[0], :single_sentence.shape[1]] = single_sentence
             # Counter(count_of_list_of_sentences)
             vector_of_words_for_whole_dataset[list_count] = result
             list_count = list_count + 1
+            ###### time
+            # stop = datetime.datetime.now()
+            # delta = stop - start
+            # print(delta)
+
     print('elmos embedings recieved')
 
     for i in range(0, data.shape[0]):
@@ -314,6 +324,7 @@ def translate_sentence_to_vectors_without_save_with_elmo(data: DataFrame, elmo,
 
     print('################')
     print('creating vectors finished')
+    show_missing_words(list_of_not_found_words)
     return data
 
 
