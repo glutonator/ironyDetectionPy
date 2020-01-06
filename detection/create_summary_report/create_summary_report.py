@@ -4,10 +4,10 @@ from typing import Tuple
 import pprint
 import csv
 
-global_path = '../../results5_ft_merged/' + 'elmo_1/'
+global_path = '../../results5_ft_merged/' + 'elmo_4/'
 directory = global_path
 # directory = '../../results4_ft_merged/' + 'third_try/'
-main_name = '1578330034_'
+main_name = '1578341728_'
 
 
 def read_from_file(path_to_file: str) -> List[str]:
