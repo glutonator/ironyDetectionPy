@@ -10,7 +10,7 @@ import datetime
 import sys
 
 embeddingsPath = 'embeddings/'
-input_filesPath = 'input_files/'
+input_filesPath = 'input_files/three/'
 preprocessed_dataPath = 'preprocessed_data/'
 vector_dataPath = 'vector_data/'
 
@@ -93,14 +93,14 @@ class EnvGlove:
         self.vector_file = 'vector_data_' + self.embedding + '_dataset_' + self.dataset_name + '.txt'
 
 
-env = EnvFastText(data_set=DataSetOne())
+# env = EnvFastText(data_set=DataSetOne())
 # env = EnvFastText(data_set=DataSetReddit())
 
 #todo: zmianiać -> a potem ręcznie połączyć
 # env = EnvFastText(data_set=DataSetThreeIrony(), parameter="irony")
 # env = EnvFastText(data_set=DataSetThreeSarcasm(), parameter="sarcasm")
 # env = EnvFastText(data_set=DataSetThreeRegular(), parameter="regular")
-# env = EnvFastText(data_set=DataSetThreeFigurative(), parameter="figurative")
+env = EnvFastText(data_set=DataSetThreeFigurative(), parameter="figurative")
 
 
 
@@ -172,8 +172,8 @@ def add_label_based_on_data_file(data: DataFrame, value_to_set):
 
 def preprocess_data():
     # wczytywanie modelu z plliku:
-    # model = load_glove_and_fastText_model(embeddingsPath + model_file)
-    model = None
+    model = load_glove_and_fastText_model(embeddingsPath + model_file)
+    # model = None
     data: DataFrame = load_input_data(input_filesPath + input_file)
     #
     # todo: uncomment

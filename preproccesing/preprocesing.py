@@ -30,14 +30,45 @@ def split_emoji(passed_string: str):
 
     return passed_string
 
+def parseHashtags2222(passed_string: str):
+    matches: list[str] = re.findall(r"([#][\w_-]+)", passed_string)
+    SPACE = ' '
+    for match in matches:
+        hashtagWord = wordninja.split(match)
+
+        replaced_string: str = "#" + SPACE + " ".join(hashtagWord) + SPACE + "*"
+        passed_string = passed_string.replace(match, replaced_string)
+
+
+        # replaced_string: str = match.replace(':', '').replace('_', " ").replace('-', " ")
+        # replaced_string = ' emote ' + replaced_string
+        # passed_string = passed_string.replace(match, replaced_string)
+
+    return passed_string
+
+
 #(([[a-z]+[_])+)
 # :(([[a-z]+[_])+[a-z]+):
 
 def clean_messages222(data: DataFrame, model: Word2VecKeyedVectors):
-    data['Tweet_text'] = data['Tweet_text'].apply(split_emoji)
+    # data['Tweet_text'] = data['Tweet_text'].apply(split_emoji)
+    contr = Contractions(kv_model=model)
+    data['Tweet_text'] = data['Tweet_text'].apply(process_contractions222, args=(contr,))
+
+    # process_contractions(data, model)
 
 
 def clean_messages(data: DataFrame, model: Word2VecKeyedVectors):
+    print('cleaning started')
+
+    # todo: uncomment if needed comented clearing contractions
+    # process_contractions(data, model)
+
+    # faster version -> clearing contractions !!!!
+    contr = Contractions(kv_model=model)
+    data['Tweet_text'] = data['Tweet_text'].apply(process_contractions222, args=(contr,))
+
+
     # remove urls
     data['Tweet_text'] = data['Tweet_text'].str \
         .replace('(http|ftp|https)://([\\w_-]+(?:(?:\\.[\\w_\\s-]+)+))([\\w.,@?^=%&:/~+#-]*[\\w@?^=%&/~+#-])?', ' url ',
@@ -52,7 +83,8 @@ def clean_messages(data: DataFrame, model: Word2VecKeyedVectors):
     data['Tweet_text'] = data['Tweet_text'].str.replace('@[A-Za-z0-9_]+', ' @ username @ ', regex=True)
 
     # replace hashtags todo: uncomment !!!!!!!!!!!!1
-    parseHashtags(data)
+    data['Tweet_text'] = data['Tweet_text'].apply(parseHashtags2222)
+    # parseHashtags(data)
 
     # replace time
     data['Tweet_text'] = data['Tweet_text'].str.replace('\\d+:\\d+', ' time ', regex=True)
@@ -72,17 +104,11 @@ def clean_messages(data: DataFrame, model: Word2VecKeyedVectors):
     data['Tweet_text'] = data['Tweet_text'].str.replace('\\.+', '.', regex=True)
     # data['Tweet_text'] = data['Tweet_text'].apply(lambda x: " ".join(x.split()))
 
-    # " ".join(s.split())
-
     # remove "..."
     data['Tweet_text'] = data['Tweet_text'].str.replace('...', '.', regex=False)
 
     # remove ".."
     data['Tweet_text'] = data['Tweet_text'].str.replace('..', '.', regex=False)
-
-
-    # todo: uncomment if needed comented clearing contractions
-    # process_contractions(data, model)
 
     # convert to lowercase
     data['Tweet_text'] = data['Tweet_text'].str.lower()
@@ -96,7 +122,10 @@ def clean_messages(data: DataFrame, model: Word2VecKeyedVectors):
     # TODO:  KeyError: "word 'erv's' not in vocabulary"
     # data['Tweet_text'] = data['Tweet_text'].str.replace(rf'[{string.punctuation}]', '')
 
+    print('cleaning finished')
 
+
+@DeprecationWarning
 def process_contractions(data, model):
     # TODO: dodać tutaj to rozpoznawanie modelu z contractions i konwersje do długich form
     cont = Contractions(kv_model=model)
@@ -108,12 +137,17 @@ def process_contractions(data, model):
     print('Contractions finished')
 
 
+def process_contractions222(passed_string: str, cont: Contractions):
+    replaced_string = list(cont.expand_texts([passed_string]))[-1]
+    return replaced_string
+
+
 def clean_messages_two(data: DataFrame):
     data['Tweet_text'] = data['Tweet_text'].str.replace('# irony *', ' ', regex=True)
     data['Tweet_text'] = data['Tweet_text'].str.replace('# ironic *', ' ', regex=True)
 
 
-
+@DeprecationWarning
 def parseHashtags(data: DataFrame, ):
     number_of_sentences = data.shape[0]
     for i in range(0, number_of_sentences):
