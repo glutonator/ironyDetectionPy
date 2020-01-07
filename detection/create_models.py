@@ -8,12 +8,9 @@ import detection.irony_models_cpu as di_cpu
 def get_all_models_gpu(total_length, max_sentence_length):
     models: List[Sequential] = []
 
-    models.append(di_gpu.give_model_8000_cnn(total_length, max_sentence_length))
-    models.append(di_gpu.give_model_8001_cnn(total_length, max_sentence_length))
-    models.append(di_gpu.give_model_8002_cnn(total_length, max_sentence_length))
-    # models.append(di_gpu.give_model_8010_cnn(total_length, max_sentence_length))
-    # models.append(di_gpu.give_model_8011_cnn(total_length, max_sentence_length))
-    # models.append(di_gpu.give_model_8012_cnn(total_length, max_sentence_length))
+    # models.append(di_gpu.give_model_8000_cnn(total_length, max_sentence_length))
+    # models.append(di_gpu.give_model_8001_cnn(total_length, max_sentence_length))
+    # models.append(di_gpu.give_model_8002_cnn(total_length, max_sentence_length))
 
     models.append(di_gpu.give_model_00(total_length, max_sentence_length))
     models.append(di_gpu.give_model_10(total_length, max_sentence_length))

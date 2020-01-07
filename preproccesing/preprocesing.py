@@ -246,6 +246,7 @@ def translate_sentence_to_vectors_without_save(data: DataFrame, model: Word2VecK
                                   output_filename: str, label_encoder: LabelEncoder,
                                   onehot_encoder: OneHotEncoder) -> DataFrame:
     # silence warnings
+    print('translate_sentence_to_vectors_without_save started')
     pd.set_option('mode.chained_assignment', None)
 
     series_of_values_asc = data['Tweet_text'].str.len().sort_values(ascending=False)
@@ -279,6 +280,7 @@ def translate_sentence_to_vectors_without_save(data: DataFrame, model: Word2VecK
         data['Tweet_text'][i] = list_of_vectors
 
     show_missing_words(list_of_not_found_words)
+    print('translate_sentence_to_vectors_without_save finished')
     return data
     # data.to_json(output_filename)
     # return list_of_not_found_words

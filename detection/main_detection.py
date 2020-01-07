@@ -66,8 +66,8 @@ class DataSetThreeRegular(ParentDataSet):
 
 class EnvFastText:
     # todo change back
-    model_file = 'wiki-news-300d-1M.vec'
-    # model_file = 'word2vec_25.txt'
+    # model_file = 'wiki-news-300d-1M.vec'
+    model_file = 'word2vec_25.txt'
 
     def __init__(self, data_set: ParentDataSet, parameter: str = ""):
         self.embedding = 'fastText'
@@ -109,8 +109,8 @@ input_file = env.input_file
 preprocessed_file = env.preprocessed_file
 # todo: change back
 # preprocessed_file = 'three_regular_figurative.txt'
-preprocessed_file = 'preprocessed_data_fastText_dataset_one.txt'
-# preprocessed_file = 'new_new_merged.txt'
+# preprocessed_file = 'preprocessed_data_fastText_dataset_one.txt'
+preprocessed_file = 'new_new_merged.txt'
 preprocessed_file_clean = env.preprocessed_file_clean
 vector_file = env.vector_file
 
@@ -193,12 +193,17 @@ def preprocess_data():
 def balance_input_data(data: DataFrame) -> DataFrame:
     print('balancing started')
     series = data['Label'].value_counts()
+    #todo: coś się jest nie tak z pobiernaiem tego get key, bo to birze chyba po indeksie a nie wartosci
     dataset_count_class_0 = series.get(key=0)
     dataset_count_class_1 = series.get(key=1)
     print(0, 1)
     print(dataset_count_class_0, dataset_count_class_1)
     df_class_0 = data[data['Label'] == 0]
     df_class_1 = data[data['Label'] == 1]
+
+    if (df_class_0.empty or df_class_1.empty):
+        df_class_0 = data[data['Label'] == '0']
+        df_class_1 = data[data['Label'] == '1']
 
     if (dataset_count_class_1 > dataset_count_class_0):
         df_class_1_under = df_class_1.sample(dataset_count_class_0)
@@ -246,14 +251,16 @@ def reduce_to_max_sentence_length(passed_string: str, max_sentence_length):
 
 def prepare_data_for_network(max_sentence_length, flag='model') -> DataFrame:
     if flag == 'model':
-        # model = load_glove_and_fastText_model(embeddingsPath + model_file)
-        model = None
+        model = load_glove_and_fastText_model(embeddingsPath + model_file)
+        # model = None
     else:
         model = provideElmo()
 
     # model = None
     print("model loaded")
     data: DataFrame = load_input_data(preprocessed_dataPath + preprocessed_file)
+    data['Label'] = data['Label'].astype(int)
+
     del data['Tweet_index']
 
     # todo: uncomment

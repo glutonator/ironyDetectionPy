@@ -19,8 +19,8 @@ max_sentence_length = 50
 # len_of_vector_embeddings = 50
 # len_of_vector_embeddings = 200
 # todo: change back
-# len_of_vector_embeddings = 25
-len_of_vector_embeddings = 1024
+len_of_vector_embeddings = 25
+# len_of_vector_embeddings = 1024
 # len_of_vector_embeddings = 300
 postags_length = 46
 total_length = len_of_vector_embeddings + postags_length
@@ -39,9 +39,9 @@ tf.disable_eager_execution()
 
 #todo: check if correct
 #create with noraml model
-# data: DataFrame = prepare_data_for_network(max_sentence_length, 'model')
+data: DataFrame = prepare_data_for_network(max_sentence_length, 'model')
 #create with elmo
-data: DataFrame = prepare_data_for_network(max_sentence_length, 'elmo')
+# data: DataFrame = prepare_data_for_network(max_sentence_length, 'elmo')
 
 
 XXXX, YYYY = get_data_from_dataset_three(data, total_length, max_sentence_length)
