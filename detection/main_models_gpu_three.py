@@ -23,7 +23,15 @@ len_of_vector_embeddings = 25
 # len_of_vector_embeddings = 1024
 # len_of_vector_embeddings = 300
 postags_length = 46
-total_length = len_of_vector_embeddings + postags_length
+with_postags = False
+# with_postags = True
+
+
+if with_postags == True:
+    total_length = len_of_vector_embeddings + postags_length
+else:
+    total_length = len_of_vector_embeddings
+
 global_path_to_results = "results5_ft_merged/"
 
 # XXXX, YYYY = get_data_for_network(total_length, max_sentence_length, 'both')
@@ -39,7 +47,7 @@ tf.disable_eager_execution()
 
 #todo: check if correct
 #create with noraml model
-data: DataFrame = prepare_data_for_network(max_sentence_length, 'model')
+data: DataFrame = prepare_data_for_network(max_sentence_length, with_postags, 'model')
 #create with elmo
 # data: DataFrame = prepare_data_for_network(max_sentence_length, 'elmo')
 

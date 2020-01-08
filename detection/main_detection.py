@@ -109,8 +109,8 @@ input_file = env.input_file
 preprocessed_file = env.preprocessed_file
 # todo: change back
 # preprocessed_file = 'three_regular_figurative.txt'
-# preprocessed_file = 'preprocessed_data_fastText_dataset_one.txt'
-preprocessed_file = 'new_new_merged.txt'
+preprocessed_file = 'preprocessed_data_fastText_dataset_one.txt'
+# preprocessed_file = 'new_new_merged.txt'
 preprocessed_file_clean = env.preprocessed_file_clean
 vector_file = env.vector_file
 
@@ -249,7 +249,7 @@ def reduce_to_max_sentence_length(passed_string: str, max_sentence_length):
 
     return passed_string
 
-def prepare_data_for_network(max_sentence_length, flag='model') -> DataFrame:
+def prepare_data_for_network(max_sentence_length, with_postags, flag='model') -> DataFrame:
     if flag == 'model':
         model = load_glove_and_fastText_model(embeddingsPath + model_file)
         # model = None
@@ -286,7 +286,8 @@ def prepare_data_for_network(max_sentence_length, flag='model') -> DataFrame:
         data: DataFrame = \
             translate_sentence_to_vectors_without_save(data, model,
                                                        output_filename=vector_dataPath + vector_file,
-                                                       label_encoder=label_encoder, onehot_encoder=onehot_encoder)
+                                                       label_encoder=label_encoder, onehot_encoder=onehot_encoder,
+                                                       with_postags=with_postags)
     else:
         data: DataFrame = \
             translate_sentence_to_vectors_without_save_with_elmo(data, model,

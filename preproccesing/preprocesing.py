@@ -242,48 +242,91 @@ def show_missing_words(list_of_not_found_words: List[str]):
     print(qqq)
     return qqq
 
+
+def translate_to_embeddings(passed_string_list: List[str], label_encoder, onehot_encoder,
+                            model, list_of_not_found_words, with_postags: bool):
+    list_of_tokens_in_sentance = passed_string_list
+    list_of_tags_in_order_in_sentance_in_onehot_encoded = None
+
+    if(with_postags == True):
+        list_of_tuples_of_tokens_and_tags = nltk.pos_tag(list_of_tokens_in_sentance)
+        list_of_tags_in_order_in_sentance = [i[1] for i in list_of_tuples_of_tokens_and_tags]
+
+        list_of_tags_in_order_in_sentance_in_numeric_labels = label_encoder.transform(list_of_tags_in_order_in_sentance)
+        list_of_tags_in_order_in_sentance_in_numeric_labels = list_of_tags_in_order_in_sentance_in_numeric_labels.reshape(
+            len(list_of_tags_in_order_in_sentance_in_numeric_labels), 1)
+        list_of_tags_in_order_in_sentance_in_onehot_encoded = onehot_encoder.transform(
+            list_of_tags_in_order_in_sentance_in_numeric_labels)
+
+    count = 0
+    list_of_vectors = []
+    for word_token in list_of_tokens_in_sentance:
+        try:
+            vector_from_word = model.get_vector(word_token)
+            # add postags
+            if(with_postags == True):
+                vector_onehot_encoded = list_of_tags_in_order_in_sentance_in_onehot_encoded[count]
+                list_of_vectors.append(np.append(vector_from_word, vector_onehot_encoded))
+            else:
+                list_of_vectors.append(vector_from_word)
+        except KeyError:
+            list_of_not_found_words.append(word_token)
+
+        count = count + 1
+
+    #todo: fix -> 1174	##to#our#countries#special#dedication#to#ma#Syrian#friends#you are#alone#instalisten#by#heart#voice# http://t.co/jOHtHVBKOw
+    # print(list_of_vectors)
+    return list_of_vectors
+
+
 def translate_sentence_to_vectors_without_save(data: DataFrame, model: Word2VecKeyedVectors,
                                   output_filename: str, label_encoder: LabelEncoder,
-                                  onehot_encoder: OneHotEncoder) -> DataFrame:
+                                  onehot_encoder: OneHotEncoder,
+                                               with_postags: bool) -> DataFrame:
     # silence warnings
     print('translate_sentence_to_vectors_without_save started')
     pd.set_option('mode.chained_assignment', None)
 
     series_of_values_asc = data['Tweet_text'].str.len().sort_values(ascending=False)
     list_of_not_found_words: List[str] = []
-    for i in range(0, data.shape[0]):
-        list_of_vectors = []
 
-        # add postags
-        # print(i)
-        list_of_tokens_in_sentance = data['Tweet_text'][i]
-        list_of_tuples_of_tokens_and_tags = nltk.pos_tag(list_of_tokens_in_sentance)
-        list_of_tags_in_order_in_sentance = [i[1] for i in list_of_tuples_of_tokens_and_tags]
+    data['Tweet_text'] = data['Tweet_text'] \
+        .apply(translate_to_embeddings,
+               args=(label_encoder, onehot_encoder, model, list_of_not_found_words, with_postags))
 
-        list_of_tags_in_order_in_sentance_in_numeric_labels = label_encoder.transform(list_of_tags_in_order_in_sentance)
-        list_of_tags_in_order_in_sentance_in_numeric_labels = list_of_tags_in_order_in_sentance_in_numeric_labels.reshape(len(list_of_tags_in_order_in_sentance_in_numeric_labels), 1)
-        list_of_tags_in_order_in_sentance_in_onehot_encoded = onehot_encoder.transform(list_of_tags_in_order_in_sentance_in_numeric_labels)
+    # for i in range(0, data.shape[0]):
+    #     list_of_vectors = []
+    #
+    #     # add postags
+    #     # print(i)
+    #     list_of_tokens_in_sentance = data['Tweet_text'][i]
+    #     list_of_tuples_of_tokens_and_tags = nltk.pos_tag(list_of_tokens_in_sentance)
+    #     list_of_tags_in_order_in_sentance = [i[1] for i in list_of_tuples_of_tokens_and_tags]
+    #
+    #     list_of_tags_in_order_in_sentance_in_numeric_labels = label_encoder.transform(list_of_tags_in_order_in_sentance)
+    #     list_of_tags_in_order_in_sentance_in_numeric_labels = list_of_tags_in_order_in_sentance_in_numeric_labels.reshape(len(list_of_tags_in_order_in_sentance_in_numeric_labels), 1)
+    #     list_of_tags_in_order_in_sentance_in_onehot_encoded = onehot_encoder.transform(list_of_tags_in_order_in_sentance_in_numeric_labels)
+    #
+    #     count = 0
+    #     # print(data['Tweet_text'][i])
+    #     for word_token in data['Tweet_text'][i]:
+    #         try:
+    #             vector_from_word = model.get_vector(word_token)
+    #             # add postags
+    #             vector_onehot_encoded = list_of_tags_in_order_in_sentance_in_onehot_encoded[count]
+    #             list_of_vectors.append(np.append(vector_from_word, vector_onehot_encoded))
+    #         except KeyError:
+    #             list_of_not_found_words.append(word_token)
+    #
+    #         count = count + 1
+    #
+    #     data['Tweet_text'][i] = list_of_vectors
 
-        count = 0
-        # print(data['Tweet_text'][i])
-        for word_token in data['Tweet_text'][i]:
-            try:
-                vector_from_word = model.get_vector(word_token)
-                # add postags
-                vector_onehot_encoded = list_of_tags_in_order_in_sentance_in_onehot_encoded[count]
-                list_of_vectors.append(np.append(vector_from_word, vector_onehot_encoded))
-            except KeyError:
-                list_of_not_found_words.append(word_token)
-
-            count = count + 1
-
-        data['Tweet_text'][i] = list_of_vectors
 
     show_missing_words(list_of_not_found_words)
     print('translate_sentence_to_vectors_without_save finished')
     return data
-    # data.to_json(output_filename)
-    # return list_of_not_found_words
+
 
 def translate_sentence_to_vectors_without_save_with_elmo(data: DataFrame, elmo,
                                                          output_filename: str, label_encoder: LabelEncoder,
