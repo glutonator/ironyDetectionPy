@@ -205,14 +205,21 @@ def get_balance_info_from_array(array, dataset_name):
     # print(dataset_name + ": \n" + str(dataset_count))
 
 
-def split_data_sets(dataX_numpy, dataY_numpy):
-    # split training and testing data
-    # todo zmianić test_size=0.9 na 0.2
-    X_train_2, X_test, Y_train_2, Y_test = train_test_split(dataX_numpy, dataY_numpy, test_size=0.2, random_state=42)
-    # X_train_2, X_test, Y_train_2, Y_test = train_test_split(dataX_numpy, dataY_numpy, test_size=0.2, random_state=None)
+def split_data_sets(dataX_numpy, dataY_numpy, XXXX_test= None, YYYY_test= None):
 
-    # X_train_2, X_test, Y_train_2, Y_test = train_test_split(dataX_numpy, dataY_numpy, test_size=0.2, random_state=42)
-    X_train, X_val, Y_train, Y_val = train_test_split(X_train_2, Y_train_2, test_size=0.2, random_state=42)
+    if XXXX_test is None:
+        # split training and testing data
+        # todo zmianić test_size=0.9 na 0.2
+        X_train_2, X_test, Y_train_2, Y_test = train_test_split(dataX_numpy, dataY_numpy, test_size=0.2, random_state=42)
+        # X_train_2, X_test, Y_train_2, Y_test = train_test_split(dataX_numpy, dataY_numpy, test_size=0.2, random_state=None)
+
+        # X_train_2, X_test, Y_train_2, Y_test = train_test_split(dataX_numpy, dataY_numpy, test_size=0.2, random_state=42)
+        X_train, X_val, Y_train, Y_val = train_test_split(X_train_2, Y_train_2, test_size=0.2, random_state=42)
+    else:
+        X_train, X_val, Y_train, Y_val = train_test_split(dataX_numpy, dataY_numpy, test_size=0.2, random_state=42)
+        X_test = XXXX_test
+        Y_test = YYYY_test
+
 
     get_balance_info_from_array(Y_train,"Y_train")
     get_balance_info_from_array(Y_val,"Y_val")

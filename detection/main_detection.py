@@ -1,5 +1,8 @@
 from __future__ import print_function
 
+from typing import Tuple
+
+from gensim.models.keyedvectors import Word2VecKeyedVectors
 from pandas import DataFrame
 import pandas as pd
 
@@ -109,9 +112,9 @@ input_file = env.input_file
 preprocessed_file = env.preprocessed_file
 # todo: change back
 # preprocessed_file = 'three_regular_figurative.txt'
-preprocessed_file = 'preprocessed_data_fastText_dataset_one.txt'
+preprocessed_file = 'new_new_merged.txt'
 # preprocessed_file = 'new_new_merged.txt'
-preprocessed_file_clean = env.preprocessed_file_clean
+preprocessed_file_to_test = 'preprocessed_data_fastText_dataset_one.txt'
 vector_file = env.vector_file
 
 
@@ -138,32 +141,6 @@ def unify_labels(data: DataFrame):
 
 def add_label_based_on_data_file(data: DataFrame, value_to_set):
     data['Label'] = value_to_set
-
-
-# def preprocess_data():
-#     # wczytywanie modelu z plliku:
-#     # model = load_glove_and_fastText_model(embeddingsPath + model_file)
-#     # data: DataFrame = load_input_data(input_filesPath + input_file)
-#     data: DataFrame = load_input_data(preprocessed_dataPath + "tmp/preprocessed_data_fastText_dataset_threeregular.txt")
-#     # todo: uncomment
-#     # clean_messages(data, model)
-#     # clean_messages_two(data)
-#
-#     data['Label'] = data['Label'].replace(1, 0)
-#
-#     # replace -1 to 0 in reddit dataset
-#     # if dataset_name == 'reddit':
-#     #     unify_labels(data)
-#
-#     # if dataset_name == 'three':
-#     #     #todo: zmianiać w zależności od datasetu
-#     #     # sarkazm i ironia -> Label =1
-#     #     #regular -> label = 0
-#     #     # add_label_based_on_data_file(data, 0)
-#     #     add_label_based_on_data_file(data, 1)
-#
-#     # save to file
-#     save_output_data(data, preprocessed_dataPath + "____new___"+"regular.txt")
 
 
 def preprocess_data():
@@ -245,20 +222,28 @@ def limit_number_of_data(data: DataFrame, max_number_of_records_per_class) -> Da
 
 def reduce_to_max_sentence_length(passed_string: str, max_sentence_length):
     if len(passed_string.split()) > max_sentence_length:
-        passed_string = " ".join(passed_string.split()[:50])
+        passed_string = " ".join(passed_string.split()[:max_sentence_length])
 
     return passed_string
 
-def prepare_data_for_network(max_sentence_length, with_postags, flag='model') -> DataFrame:
-    if flag == 'model':
-        model = load_glove_and_fastText_model(embeddingsPath + model_file)
-        # model = None
-    else:
-        model = provideElmo()
+
+def prepare_data_for_network(max_sentence_length, with_postags, flag='model',
+                             model: Word2VecKeyedVectors = None, preprocessed_file_to_test: str = None) -> \
+        Tuple[DataFrame, Word2VecKeyedVectors]:
+    if model is None:
+        if flag == 'model':
+            model = load_glove_and_fastText_model(embeddingsPath + model_file)
+            # model = None
+        else:
+            model = provideElmo()
+
 
     # model = None
     print("model loaded")
-    data: DataFrame = load_input_data(preprocessed_dataPath + preprocessed_file)
+    if preprocessed_file_to_test is None:
+        data: DataFrame = load_input_data(preprocessed_dataPath + preprocessed_file)
+    else:
+        data: DataFrame = load_input_data(preprocessed_dataPath + preprocessed_file_to_test)
     data['Label'] = data['Label'].astype(int)
 
     del data['Tweet_index']
@@ -294,25 +279,5 @@ def prepare_data_for_network(max_sentence_length, with_postags, flag='model') ->
                                                                  output_filename=vector_dataPath + vector_file,
                                                                  label_encoder=label_encoder, onehot_encoder=onehot_encoder)
 
-    # print("translate_sentence_to_vectors finished")
-    # print("_________________________________")
-    # print(list_of_not_found_words)
-    # print("size:" + str(len(list_of_not_found_words)))
-    return data
+    return data, model
 
-# start = datetime.datetime.now()
-#
-# # debug(input_file)
-#
-# # debug('model_file')
-# # print_all()
-# # preprocess_data()
-#
-# # if dataset_name == 'three':
-# #     preprocessed_file = preprocessed_file_clean
-# #todo: wywalić hashtag irony z danych, bo nie wywaliłem wczesniej
-# prepare_data_for_network()
-#
-# stop = datetime.datetime.now()
-# delta = stop - start
-# print(delta)
