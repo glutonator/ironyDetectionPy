@@ -377,7 +377,7 @@ def translate_sentence_to_vectors_without_save_with_elmo(data: DataFrame, elmo,
     #data.to_numpy()[:,1]
     list_for_elmo = []
     longest_sentance = 0
-    for tokenized_sentence in data.to_numpy()[:, 1]:
+    for tokenized_sentence in data['Tweet_text'].to_numpy():
         longest_sentance = max(longest_sentance, len(tokenized_sentence))
         merged_sentence = ' '.join(tokenized_sentence)
         list_for_elmo.append(merged_sentence)

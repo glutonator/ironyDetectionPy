@@ -228,7 +228,7 @@ def reduce_to_max_sentence_length(passed_string: str, max_sentence_length):
 
 
 def prepare_data_for_network(max_sentence_length, with_postags, flag='model',
-                             model: Word2VecKeyedVectors = None, preprocessed_file_to_test: str = None) -> \
+                             model = None, preprocessed_file_to_test: str = None) -> \
         Tuple[DataFrame, Word2VecKeyedVectors]:
     if model is None:
         if flag == 'model':

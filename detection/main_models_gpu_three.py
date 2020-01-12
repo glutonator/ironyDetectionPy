@@ -54,7 +54,7 @@ tf.disable_eager_execution()
 #                                                preprocessed_file_to_test='preprocessed_data_fastText_dataset_one.txt')
 
 #create with elmo
-data, model = prepare_data_for_network(max_sentence_length, 'elmo')
+data, model = prepare_data_for_network(max_sentence_length, with_postags, 'elmo')
 # model = None
 data_test, modelXXX = prepare_data_for_network(max_sentence_length, with_postags, 'elmo', model,
                                                preprocessed_file_to_test='preprocessed_data_fastText_dataset_one.txt')
