@@ -323,20 +323,62 @@ def translate_sentence_to_vectors_without_save(data: DataFrame, model: Word2VecK
     #     data['Tweet_text'][i] = list_of_vectors
 
 
-    show_missing_words(list_of_not_found_words)
+    show_missing_words(list_of_not_found_words,)
     print('translate_sentence_to_vectors_without_save finished')
     return data
 
 
+def translate_to_embeddings_elmo(passed_string_list: List[str], label_encoder, onehot_encoder,
+                                 list_of_not_found_words, vector_of_words_for_whole_dataset, list_counter: List[int],
+                                 with_postags: bool):
+    list_of_tokens_in_sentance = passed_string_list
+    list_of_tags_in_order_in_sentance_in_onehot_encoded = None
+
+    if(with_postags == True):
+        list_of_tuples_of_tokens_and_tags = nltk.pos_tag(list_of_tokens_in_sentance)
+        list_of_tags_in_order_in_sentance = [i[1] for i in list_of_tuples_of_tokens_and_tags]
+
+        list_of_tags_in_order_in_sentance_in_numeric_labels = label_encoder.transform(list_of_tags_in_order_in_sentance)
+        list_of_tags_in_order_in_sentance_in_numeric_labels = list_of_tags_in_order_in_sentance_in_numeric_labels.reshape(
+            len(list_of_tags_in_order_in_sentance_in_numeric_labels), 1)
+        list_of_tags_in_order_in_sentance_in_onehot_encoded = onehot_encoder.transform(
+            list_of_tags_in_order_in_sentance_in_numeric_labels)
+
+    count = 0
+    vector_of_words = vector_of_words_for_whole_dataset[list_counter[0]]
+    list_of_vectors = []
+    for word_token in list_of_tokens_in_sentance:
+        try:
+            vector_from_word = vector_of_words[count]
+            if(with_postags == True):
+                # add postags
+                vector_onehot_encoded = list_of_tags_in_order_in_sentance_in_onehot_encoded[count]
+                list_of_vectors.append(np.append(vector_from_word, vector_onehot_encoded))
+            else:
+                list_of_vectors.append(vector_from_word)
+
+        except KeyError:
+            list_of_not_found_words.append(word_token)
+
+        count = count + 1
+
+    list_counter[0] = list_counter[0] + 1
+    return list_of_vectors
+
+
+
 def translate_sentence_to_vectors_without_save_with_elmo(data: DataFrame, elmo,
                                                          output_filename: str, label_encoder: LabelEncoder,
-                                                         onehot_encoder: OneHotEncoder) -> DataFrame:
+                                                         onehot_encoder: OneHotEncoder,
+                                                         with_postags: bool) -> DataFrame:
     # silence warnings
     pd.set_option('mode.chained_assignment', None)
     list_of_not_found_words: List[str] = []
     #data.to_numpy()[:,1]
     list_for_elmo = []
+    longest_sentance = 0
     for tokenized_sentence in data.to_numpy()[:, 1]:
+        longest_sentance = max(longest_sentance, len(tokenized_sentence))
         merged_sentence = ' '.join(tokenized_sentence)
         list_for_elmo.append(merged_sentence)
 
@@ -344,7 +386,7 @@ def translate_sentence_to_vectors_without_save_with_elmo(data: DataFrame, elmo,
 
     list_splited_into_batches = list(divide_chunks(list_for_elmo, 200))
     number_of_sentances = len(list_for_elmo)
-    longest_sentance = len(max(list_for_elmo, key=len))
+    # longest_sentance = len(max(list_for_elmo, key=len))
     vector_of_words_for_whole_dataset = np.zeros(shape=(number_of_sentances, longest_sentance, 1024))
 
     list_count = 0
@@ -353,53 +395,51 @@ def translate_sentence_to_vectors_without_save_with_elmo(data: DataFrame, elmo,
         vector_of_words_for_batch = elmo_vectors(elmo, small_list)
         print('elmo vectors for batch gotten ')
         for single_sentence in vector_of_words_for_batch:
-            ###### time
-            # start = datetime.datetime.now()
 
             result = np.zeros(shape=(longest_sentance, 1024))
             result[:single_sentence.shape[0], :single_sentence.shape[1]] = single_sentence
-            # Counter(count_of_list_of_sentences)
             vector_of_words_for_whole_dataset[list_count] = result
             list_count = list_count + 1
-            ###### time
-            # stop = datetime.datetime.now()
-            # delta = stop - start
-            # print(delta)
 
     print('elmos embedings recieved')
 
-    for i in range(0, data.shape[0]):
-        list_of_vectors = []
+    list_counter = [0]
+    data['Tweet_text'] = data['Tweet_text'] \
+        .apply(translate_to_embeddings_elmo,
+               args=(label_encoder, onehot_encoder, list_of_not_found_words,
+                     vector_of_words_for_whole_dataset, list_counter,  with_postags))
 
-        # add postags
-        # print(i)
-        list_of_tokens_in_sentance = data['Tweet_text'][i]
-        list_of_tuples_of_tokens_and_tags = nltk.pos_tag(list_of_tokens_in_sentance)
-        list_of_tags_in_order_in_sentance = [i[1] for i in list_of_tuples_of_tokens_and_tags]
 
-        list_of_tags_in_order_in_sentance_in_numeric_labels = label_encoder.transform(list_of_tags_in_order_in_sentance)
-        list_of_tags_in_order_in_sentance_in_numeric_labels = list_of_tags_in_order_in_sentance_in_numeric_labels.reshape(len(list_of_tags_in_order_in_sentance_in_numeric_labels), 1)
-        list_of_tags_in_order_in_sentance_in_onehot_encoded = onehot_encoder.transform(list_of_tags_in_order_in_sentance_in_numeric_labels)
-
-        count = 0
-        # print(data['Tweet_text'][i])
-        array = data['Tweet_text'][i]
-        # vector_of_words = elmo_vectors(elmo, array)
-        vector_of_words = vector_of_words_for_whole_dataset[i]
-        for word_token in array:
-            try:
-                # vector_from_word = elmo.get_vector(word_token)
-                # vector_from_word = elmo_vectors(elmo, [word_token])
-                vector_from_word = vector_of_words[count]
-                # add postags
-                vector_onehot_encoded = list_of_tags_in_order_in_sentance_in_onehot_encoded[count]
-                list_of_vectors.append(np.append(vector_from_word, vector_onehot_encoded))
-            except KeyError:
-                list_of_not_found_words.append(word_token)
-
-            count = count + 1
-
-        data['Tweet_text'][i] = list_of_vectors
+    # for i in range(0, data.shape[0]):
+    #     list_of_vectors = []
+    #
+    #     # add postags
+    #     # print(i)
+    #     list_of_tokens_in_sentance = data['Tweet_text'][i]
+    #     list_of_tuples_of_tokens_and_tags = nltk.pos_tag(list_of_tokens_in_sentance)
+    #     list_of_tags_in_order_in_sentance = [i[1] for i in list_of_tuples_of_tokens_and_tags]
+    #
+    #     list_of_tags_in_order_in_sentance_in_numeric_labels = label_encoder.transform(list_of_tags_in_order_in_sentance)
+    #     list_of_tags_in_order_in_sentance_in_numeric_labels = list_of_tags_in_order_in_sentance_in_numeric_labels.reshape(len(list_of_tags_in_order_in_sentance_in_numeric_labels), 1)
+    #     list_of_tags_in_order_in_sentance_in_onehot_encoded = onehot_encoder.transform(list_of_tags_in_order_in_sentance_in_numeric_labels)
+    #
+    #     count = 0
+    #     # print(data['Tweet_text'][i])
+    #     array = data['Tweet_text'][i]
+    #     # vector_of_words = elmo_vectors(elmo, array)
+    #     vector_of_words = vector_of_words_for_whole_dataset[i]
+    #     for word_token in array:
+    #         try:
+    #             vector_from_word = vector_of_words[count]
+    #             # add postags
+    #             vector_onehot_encoded = list_of_tags_in_order_in_sentance_in_onehot_encoded[count]
+    #             list_of_vectors.append(np.append(vector_from_word, vector_onehot_encoded))
+    #         except KeyError:
+    #             list_of_not_found_words.append(word_token)
+    #
+    #         count = count + 1
+    #
+    #     data['Tweet_text'][i] = list_of_vectors
 
     print('################')
     print('creating vectors finished')

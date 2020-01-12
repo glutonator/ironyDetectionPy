@@ -55,7 +55,7 @@ tf.disable_eager_execution()
 
 #create with elmo
 data, model = prepare_data_for_network(max_sentence_length, 'elmo')
-
+# model = None
 data_test, modelXXX = prepare_data_for_network(max_sentence_length, with_postags, 'elmo', model,
                                                preprocessed_file_to_test='preprocessed_data_fastText_dataset_one.txt')
 
@@ -67,6 +67,7 @@ XXXX_test, YYYY_test = get_data_from_dataset_three(data_test, total_length, max_
 # XXXX, YYYY = get_data_for_network(total_length, max_sentence_length, 'three')
 #
 #
+# X_train, X_val, X_test, Y_train, Y_val, Y_test = split_data_sets(XXXX, YYYY,)
 X_train, X_val, X_test, Y_train, Y_val, Y_test = split_data_sets(XXXX, YYYY, XXXX_test, YYYY_test)
 
 models: List[Sequential] = get_all_models_gpu(total_length, max_sentence_length)

@@ -277,7 +277,8 @@ def prepare_data_for_network(max_sentence_length, with_postags, flag='model',
         data: DataFrame = \
             translate_sentence_to_vectors_without_save_with_elmo(data, model,
                                                                  output_filename=vector_dataPath + vector_file,
-                                                                 label_encoder=label_encoder, onehot_encoder=onehot_encoder)
+                                                                 label_encoder=label_encoder, onehot_encoder=onehot_encoder,
+                                                                 with_postags=with_postags)
 
     return data, model
 
