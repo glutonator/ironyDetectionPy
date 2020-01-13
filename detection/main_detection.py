@@ -69,8 +69,8 @@ class DataSetThreeRegular(ParentDataSet):
 
 class EnvFastText:
     # todo change back
-    # model_file = 'wiki-news-300d-1M.vec'
-    model_file = 'word2vec_25.txt'
+    model_file = 'wiki-news-300d-1M.vec'
+    # model_file = 'word2vec_25.txt'
 
     def __init__(self, data_set: ParentDataSet, parameter: str = ""):
         self.embedding = 'fastText'
@@ -112,7 +112,7 @@ input_file = env.input_file
 preprocessed_file = env.preprocessed_file
 # todo: change back
 # preprocessed_file = 'three_regular_figurative.txt'
-preprocessed_file = 'new_new_merged.txt'
+# preprocessed_file = 'new_new_merged.txt'
 # preprocessed_file = 'new_new_merged.txt'
 preprocessed_file_to_test = 'preprocessed_data_fastText_dataset_one.txt'
 vector_file = env.vector_file
@@ -183,11 +183,11 @@ def balance_input_data(data: DataFrame) -> DataFrame:
         df_class_1 = data[data['Label'] == '1']
 
     if (dataset_count_class_1 > dataset_count_class_0):
-        df_class_1_under = df_class_1.sample(dataset_count_class_0)
+        df_class_1_under = df_class_1.sample(dataset_count_class_0, random_state=42)
         df_test_under = pd.concat([df_class_0, df_class_1_under], axis=0)
         data = df_test_under
     elif (dataset_count_class_1 < dataset_count_class_0):
-        df_class_0_under = df_class_0.sample(dataset_count_class_1)
+        df_class_0_under = df_class_0.sample(dataset_count_class_1, random_state=42)
         df_test_under = pd.concat([df_class_0_under, df_class_1], axis=0)
         data = df_test_under
 

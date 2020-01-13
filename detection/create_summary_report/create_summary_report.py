@@ -4,10 +4,12 @@ from typing import Tuple
 import pprint
 import csv
 
-global_path = '../../results5_ft_merged/' + 'elmo_4/'
+dir_name = '8_run'
+file_name = dir_name + '____'
+global_path = '../../results6_ft_merged/' + dir_name + '/'
 directory = global_path
 # directory = '../../results4_ft_merged/' + 'third_try/'
-main_name = '1578341728_'
+main_name = '1578941335_'
 
 
 def read_from_file(path_to_file: str) -> List[str]:
@@ -96,7 +98,7 @@ tmp_dict = get_dict_with_metrics(directory, main_name=main_name)
 data = convert_dict_for_save_to_csv(tmp_dict)
 
 
-with open(main_name + 'test_best_scores_other_metrics.csv', 'w') as csvFile:
+with open(file_name + 'test_best_scores_other_metrics.csv', 'w') as csvFile:
 
     # fields = data[0].keys()
     # accuracy ,precision ,recall ,f1 ,model
