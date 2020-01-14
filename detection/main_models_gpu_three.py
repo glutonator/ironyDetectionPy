@@ -20,12 +20,12 @@ max_sentence_length = 50
 # len_of_vector_embeddings = 50
 # len_of_vector_embeddings = 200
 # todo: change back
-len_of_vector_embeddings = 25
-# len_of_vector_embeddings = 1024
+# len_of_vector_embeddings = 25
+len_of_vector_embeddings = 1024
 # len_of_vector_embeddings = 300
 postags_length = 46
-with_postags = False
-# with_postags = True
+# with_postags = False
+with_postags = True
 #todo: teraz trzeba elmo ogarnać
 
 if with_postags == True:
@@ -48,13 +48,13 @@ tf.disable_eager_execution()
 
 #todo: check if correct
 #create with noraml model
-data, model = prepare_data_for_network(max_sentence_length, with_postags, 'model')
+# data, model = prepare_data_for_network(max_sentence_length, with_postags, 'model')
 
 # data_test, modelXXX = prepare_data_for_network(max_sentence_length, with_postags, 'model', model,
 #                                                preprocessed_file_to_test='preprocessed_data_fastText_dataset_one.txt')
 
 #create with elmo
-# data, model = prepare_data_for_network(max_sentence_length, with_postags, 'elmo')
+data, model = prepare_data_for_network(max_sentence_length, with_postags, 'elmo')
 # model = None
 # data_test, modelXXX = prepare_data_for_network(max_sentence_length, with_postags, 'elmo', model,
 #                                                preprocessed_file_to_test='preprocessed_data_fastText_dataset_one.txt')
