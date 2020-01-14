@@ -62,6 +62,46 @@ def give_model_8001_cnn(len_of_vector_embeddings, max_sentence_length):
     function_name = inspect.currentframe().f_code.co_name
     return model, function_name
 
+def give_model_8001_cnn_5(len_of_vector_embeddings, max_sentence_length):
+    model: Sequential = Sequential()
+    model.add(Conv1D(300, kernel_size=5, activation='relu', input_shape=(max_sentence_length, len_of_vector_embeddings)))
+    model.add(Flatten())
+    model.add(Dense(300, activation='softmax'))
+    model.add(Dense(1, activation='sigmoid'))
+
+    function_name = inspect.currentframe().f_code.co_name
+    return model, function_name
+
+def give_model_8001_cnn_7(len_of_vector_embeddings, max_sentence_length):
+    model: Sequential = Sequential()
+    model.add(Conv1D(300, kernel_size=7, activation='relu', input_shape=(max_sentence_length, len_of_vector_embeddings)))
+    model.add(Flatten())
+    model.add(Dense(300, activation='softmax'))
+    model.add(Dense(1, activation='sigmoid'))
+
+    function_name = inspect.currentframe().f_code.co_name
+    return model, function_name
+
+def give_model_8001_cnn_9(len_of_vector_embeddings, max_sentence_length):
+    model: Sequential = Sequential()
+    model.add(Conv1D(300, kernel_size=9, activation='relu', input_shape=(max_sentence_length, len_of_vector_embeddings)))
+    model.add(Flatten())
+    model.add(Dense(300, activation='softmax'))
+    model.add(Dense(1, activation='sigmoid'))
+
+    function_name = inspect.currentframe().f_code.co_name
+    return model, function_name
+
+def give_model_8001_cnn_15(len_of_vector_embeddings, max_sentence_length):
+    model: Sequential = Sequential()
+    model.add(Conv1D(300, kernel_size=15, activation='relu', input_shape=(max_sentence_length, len_of_vector_embeddings)))
+    model.add(Flatten())
+    model.add(Dense(300, activation='softmax'))
+    model.add(Dense(1, activation='sigmoid'))
+
+    function_name = inspect.currentframe().f_code.co_name
+    return model, function_name
+
 def give_model_8002_cnn(len_of_vector_embeddings, max_sentence_length):
     model: Sequential = Sequential()
     model.add(Conv1D(500, kernel_size=3, activation='relu', input_shape=(max_sentence_length, len_of_vector_embeddings)))
@@ -113,6 +153,57 @@ def give_model_10(len_of_vector_embeddings, max_sentence_length):
     function_name = inspect.currentframe().f_code.co_name
     return model, function_name
 
+def give_model_10_1(len_of_vector_embeddings, max_sentence_length):
+    model: Sequential = Sequential()
+    model.add(CuDNNLSTM(50, input_shape=(max_sentence_length, len_of_vector_embeddings), return_sequences=False))
+    model.add(Dense(50, activation='sigmoid'))
+    model.add(Dense(1, activation='sigmoid'))
+    function_name = inspect.currentframe().f_code.co_name
+    return model, function_name
+
+def give_model_10_2(len_of_vector_embeddings, max_sentence_length):
+    model: Sequential = Sequential()
+    model.add(CuDNNLSTM(30, input_shape=(max_sentence_length, len_of_vector_embeddings), return_sequences=False))
+    model.add(Dense(30, activation='sigmoid'))
+    model.add(Dense(1, activation='sigmoid'))
+    function_name = inspect.currentframe().f_code.co_name
+    return model, function_name
+
+def give_model_10_3(len_of_vector_embeddings, max_sentence_length):
+    model: Sequential = Sequential()
+    model.add(CuDNNLSTM(30, input_shape=(max_sentence_length, len_of_vector_embeddings), return_sequences=False))
+    # model.add(Dense(30, activation='sigmoid'))
+    model.add(Dense(1, activation='sigmoid'))
+    function_name = inspect.currentframe().f_code.co_name
+    return model, function_name
+
+def give_model_10_4(len_of_vector_embeddings, max_sentence_length):
+    model: Sequential = Sequential()
+    model.add(CuDNNLSTM(50, input_shape=(max_sentence_length, len_of_vector_embeddings), return_sequences=False))
+    # model.add(Dense(30, activation='sigmoid'))
+    model.add(Dense(1, activation='sigmoid'))
+    function_name = inspect.currentframe().f_code.co_name
+    return model, function_name
+
+def give_model_10_5(len_of_vector_embeddings, max_sentence_length):
+    model: Sequential = Sequential()
+    model.add(
+        Bidirectional(CuDNNLSTM(50, return_sequences=False),
+                      input_shape=(max_sentence_length, len_of_vector_embeddings)))
+    # model.add(Dense(30, activation='sigmoid'))
+    model.add(Dense(1, activation='sigmoid'))
+    function_name = inspect.currentframe().f_code.co_name
+    return model, function_name
+
+def give_model_10_6(len_of_vector_embeddings, max_sentence_length):
+    model: Sequential = Sequential()
+    model.add(
+        Bidirectional(CuDNNLSTM(25, return_sequences=False),
+                      input_shape=(max_sentence_length, len_of_vector_embeddings)))
+    # model.add(Dense(30, activation='sigmoid'))
+    model.add(Dense(1, activation='sigmoid'))
+    function_name = inspect.currentframe().f_code.co_name
+    return model, function_name
 
 def give_model_20(len_of_vector_embeddings, max_sentence_length):
     model: Sequential = Sequential()
