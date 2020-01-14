@@ -4,12 +4,12 @@ from typing import Tuple
 import pprint
 import csv
 
-dir_name = '4_all'
+dir_name = '6_dropout'
 file_name = dir_name + '____'
 global_path = '../../results6_ft_merged/' + dir_name + '/'
 directory = global_path
 # directory = '../../results4_ft_merged/' + 'third_try/'
-main_name = '1579006017_'
+main_name = '1579011278_'
 
 
 def read_from_file(path_to_file: str) -> List[str]:

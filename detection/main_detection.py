@@ -69,8 +69,8 @@ class DataSetThreeRegular(ParentDataSet):
 
 class EnvFastText:
     # todo change back
-    model_file = 'wiki-news-300d-1M.vec'
-    # model_file = 'word2vec_25.txt'
+    # model_file = 'wiki-news-300d-1M.vec'
+    model_file = 'word2vec_25.txt'
 
     def __init__(self, data_set: ParentDataSet, parameter: str = ""):
         self.embedding = 'fastText'
