@@ -1,0 +1,5 @@
+emdedings len0 = 25
+postags = false
+dataset_train = three
+dataset_test = three
+limited_to_per_class = 2000

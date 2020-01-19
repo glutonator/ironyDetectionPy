@@ -33,7 +33,7 @@ if with_postags == True:
 else:
     total_length = len_of_vector_embeddings
 
-global_path_to_results = "results6_ft_merged/"
+global_path_to_results = "results7_ft_merged/"
 
 # XXXX, YYYY = get_data_for_network(total_length, max_sentence_length, 'both')
 # XXXX, YYYY = get_data_for_network(total_length, max_sentence_length, 'red')

@@ -4,7 +4,7 @@ from tensorflow.keras import Sequential
 from tensorflow.keras.layers import Dense, Dropout, Bidirectional, Flatten, Conv2D, Conv1D, GlobalMaxPooling1D
 from sklearn import svm
 from sklearn.metrics import accuracy_score
-from tensorflow_core.python.keras.layers import CuDNNLSTM, SpatialDropout1D
+from tensorflow_core.python.keras.layers import CuDNNLSTM, SpatialDropout1D, MaxPooling1D
 
 
 def baseline_00(X_train, X_val, X_test, Y_train, Y_val, Y_test):
@@ -35,6 +35,40 @@ def give_model_00(len_of_vector_embeddings, max_sentence_length):
     # model.add(Dense(20))
     # model.add(Dense(20))
     # model.add(Dense(40))
+    model.add(Flatten())
+    model.add(Dense(1, activation='sigmoid'))
+
+    function_name = inspect.currentframe().f_code.co_name
+    return model, function_name
+
+def give_model_00_1(len_of_vector_embeddings, max_sentence_length):
+    model: Sequential = Sequential()
+    model.add(Dense(20, input_shape=(max_sentence_length, len_of_vector_embeddings)))
+    model.add(Dense(20))
+    # model.add(Dense(20))
+    # model.add(Dense(40))
+    model.add(Flatten())
+    model.add(Dense(1, activation='sigmoid'))
+
+    function_name = inspect.currentframe().f_code.co_name
+    return model, function_name
+
+def give_model_00_2(len_of_vector_embeddings, max_sentence_length):
+    model: Sequential = Sequential()
+    model.add(Dense(200, input_shape=(max_sentence_length, len_of_vector_embeddings)))
+    model.add(Dense(200))
+    model.add(Flatten())
+    model.add(Dense(1, activation='sigmoid'))
+
+    function_name = inspect.currentframe().f_code.co_name
+    return model, function_name
+
+def give_model_00_3(len_of_vector_embeddings, max_sentence_length):
+    model: Sequential = Sequential()
+    model.add(Dense(200, input_shape=(max_sentence_length, len_of_vector_embeddings)))
+    model.add(Dropout(0.2))
+    model.add(Dense(200))
+    model.add(Dropout(0.2))
     model.add(Flatten())
     model.add(Dense(1, activation='sigmoid'))
 
@@ -101,6 +135,57 @@ def give_model_8001_cnn_15(len_of_vector_embeddings, max_sentence_length):
 
     function_name = inspect.currentframe().f_code.co_name
     return model, function_name
+
+def give_model_8001_cnn_15_pool(len_of_vector_embeddings, max_sentence_length):
+    model: Sequential = Sequential()
+    model.add(Conv1D(300, kernel_size=15, activation='relu', input_shape=(max_sentence_length, len_of_vector_embeddings)))
+    model.add(MaxPooling1D(pool_size=2))
+    model.add(Flatten())
+    model.add(Dense(300, activation='softmax'))
+    model.add(Dense(1, activation='sigmoid'))
+
+    function_name = inspect.currentframe().f_code.co_name
+    return model, function_name
+
+def give_model_8001_cnn_15_pool2(len_of_vector_embeddings, max_sentence_length):
+    model: Sequential = Sequential()
+    model.add(Conv1D(300, kernel_size=15, activation='relu', input_shape=(max_sentence_length, len_of_vector_embeddings)))
+    model.add(MaxPooling1D(pool_size=8))
+    model.add(Flatten())
+    model.add(Dense(300, activation='softmax'))
+    model.add(Dense(1, activation='sigmoid'))
+
+    function_name = inspect.currentframe().f_code.co_name
+    return model, function_name
+
+def give_model_8001_cnn_2_layers(len_of_vector_embeddings, max_sentence_length):
+    model: Sequential = Sequential()
+    model.add(Conv1D(300, kernel_size=3, activation='relu', input_shape=(max_sentence_length, len_of_vector_embeddings)))
+    model.add(MaxPooling1D(pool_size=2))
+    model.add(Conv1D(300, kernel_size=3, activation='relu'))
+    model.add(MaxPooling1D(pool_size=2))
+    model.add(Flatten())
+    model.add(Dense(300, activation='softmax'))
+    model.add(Dense(1, activation='sigmoid'))
+
+    function_name = inspect.currentframe().f_code.co_name
+    return model, function_name
+
+def give_model_8001_cnn_3_layers(len_of_vector_embeddings, max_sentence_length):
+    model: Sequential = Sequential()
+    model.add(Conv1D(300, kernel_size=3, activation='relu', input_shape=(max_sentence_length, len_of_vector_embeddings)))
+    model.add(MaxPooling1D(pool_size=2))
+    model.add(Conv1D(300, kernel_size=3, activation='relu'))
+    model.add(MaxPooling1D(pool_size=2))
+    model.add(Conv1D(300, kernel_size=3, activation='relu'))
+    model.add(MaxPooling1D(pool_size=2))
+    model.add(Flatten())
+    model.add(Dense(300, activation='softmax'))
+    model.add(Dense(1, activation='sigmoid'))
+
+    function_name = inspect.currentframe().f_code.co_name
+    return model, function_name
+
 
 def give_model_8002_cnn(len_of_vector_embeddings, max_sentence_length):
     model: Sequential = Sequential()

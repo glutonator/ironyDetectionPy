@@ -28,10 +28,13 @@ def train_model_learing_rate(model: Sequential, X_train, X_val, X_test, Y_train,
 
     # min loss
 
-    save_best = ModelCheckpoint(path + file_with_model_weights, monitor='val_loss', verbose=1,
+    # save_best = ModelCheckpoint(path + file_with_model_weights, monitor='val_loss', verbose=1,
+    #                                             save_best_only=True)
+    save_best = ModelCheckpoint(path + file_with_model_weights, monitor='val_loss', verbose=0,
                                                 save_best_only=True)
 
-    early_stop = EarlyStopping(monitor='val_loss', min_delta=0, patience=10, verbose=1)
+    # early_stop = EarlyStopping(monitor='val_loss', min_delta=0, patience=10, verbose=1)
+    early_stop = EarlyStopping(monitor='val_loss', min_delta=0, patience=10, verbose=0)
 
 
     # max acc

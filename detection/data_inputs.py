@@ -213,10 +213,11 @@ def split_data_sets(dataX_numpy, dataY_numpy, XXXX_test= None, YYYY_test= None):
         X_train_2, X_test, Y_train_2, Y_test = train_test_split(dataX_numpy, dataY_numpy, test_size=0.2, random_state=42)
         # X_train_2, X_test, Y_train_2, Y_test = train_test_split(dataX_numpy, dataY_numpy, test_size=0.2, random_state=None)
 
-        # X_train_2, X_test, Y_train_2, Y_test = train_test_split(dataX_numpy, dataY_numpy, test_size=0.2, random_state=42)
         X_train, X_val, Y_train, Y_val = train_test_split(X_train_2, Y_train_2, test_size=0.2, random_state=42)
+        # X_train, X_val, Y_train, Y_val = train_test_split(X_train_2, Y_train_2, test_size=0.2, random_state=None)
     else:
         X_train, X_val, Y_train, Y_val = train_test_split(dataX_numpy, dataY_numpy, test_size=0.2, random_state=42)
+        # X_train, X_val, Y_train, Y_val = train_test_split(dataX_numpy, dataY_numpy, test_size=0.2, random_state=None)
         X_test = XXXX_test
         Y_test = YYYY_test
 

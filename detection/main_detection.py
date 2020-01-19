@@ -113,7 +113,7 @@ preprocessed_file = env.preprocessed_file
 # todo: change back
 # preprocessed_file = 'three_regular_figurative.txt'
 # preprocessed_file = 'new_new_merged.txt'
-# preprocessed_file = 'new_new_merged.txt'
+preprocessed_file = 'new_new_merged_correct.txt'
 preprocessed_file_to_test = 'preprocessed_data_fastText_dataset_one.txt'
 vector_file = env.vector_file
 
@@ -183,10 +183,12 @@ def balance_input_data(data: DataFrame) -> DataFrame:
         df_class_1 = data[data['Label'] == '1']
 
     if (dataset_count_class_1 > dataset_count_class_0):
+        # df_class_1_under = df_class_1.sample(dataset_count_class_0, random_state=None)
         df_class_1_under = df_class_1.sample(dataset_count_class_0, random_state=42)
         df_test_under = pd.concat([df_class_0, df_class_1_under], axis=0)
         data = df_test_under
     elif (dataset_count_class_1 < dataset_count_class_0):
+        # df_class_0_under = df_class_0.sample(dataset_count_class_1, random_state=None)
         df_class_0_under = df_class_0.sample(dataset_count_class_1, random_state=42)
         df_test_under = pd.concat([df_class_0_under, df_class_1], axis=0)
         data = df_test_under
@@ -209,8 +211,8 @@ def limit_number_of_data(data: DataFrame, max_number_of_records_per_class) -> Da
     df_class_0 = data[data['Label'] == 0]
     df_class_1 = data[data['Label'] == 1]
 
-    df_class_0_under = df_class_0.sample(max_number_of_records_per_class)
-    df_class_1_under = df_class_1.sample(max_number_of_records_per_class)
+    df_class_0_under = df_class_0.sample(max_number_of_records_per_class, random_state=42)
+    df_class_1_under = df_class_1.sample(max_number_of_records_per_class, random_state=42)
     df_test_under = pd.concat([df_class_0_under, df_class_1_under], axis=0)
     data = df_test_under
 
@@ -253,7 +255,7 @@ def prepare_data_for_network(max_sentence_length, with_postags, flag='model',
 
     data['Tweet_text'] = data['Tweet_text'].apply(reduce_to_max_sentence_length, args=(max_sentence_length,))
 
-    # data = limit_number_of_data(data, 10000)
+    # data = limit_number_of_data(data, 2000)
 
     print("data loaded")
     if dataset_name == 'reddit':
