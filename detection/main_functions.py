@@ -46,7 +46,7 @@ def train_model_learing_rate(model: Sequential, X_train, X_val, X_test, Y_train,
     # cb = [save_best]
     results = model.fit(X_train, Y_train, validation_data=(X_val, Y_val),
                         # callbacks=cb, epochs=100, batch_size=20,
-                        callbacks=cb, epochs=100, batch_size=500,
+                        callbacks=cb, epochs=100, batch_size=50,
                         verbose=0)
     # verbose=0)
     # todo: change to old value of epochs = 100
