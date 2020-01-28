@@ -255,7 +255,7 @@ def prepare_data_for_network(max_sentence_length, with_postags, flag='model',
 
     data['Tweet_text'] = data['Tweet_text'].apply(reduce_to_max_sentence_length, args=(max_sentence_length,))
 
-    # data = limit_number_of_data(data, 2000)
+    data = limit_number_of_data(data, 2000)
 
     print("data loaded")
     if dataset_name == 'reddit':
