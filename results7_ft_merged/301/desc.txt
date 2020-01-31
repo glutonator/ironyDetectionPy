@@ -1,0 +1,4 @@
+emdedings len = 25
+postags = false
+dataset_train = three
+dataset_test = one
